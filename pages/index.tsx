@@ -14,15 +14,24 @@ class Racer {
   }
 }
 
+const raceSize = 95;
+
 class Race {
   framesPassed = 0;
+
+  results: Racer[] = [];
+
   constructor(public racers: Racer[]) {}
 
   increaseTimer() {
     this.framesPassed += 1;
 
     this.racers.forEach((player) => {
-      player.position += player.speed;
+      player.position = Math.min(player.position + player.speed, raceSize);
+
+      if (player.position >= raceSize && !this.results.includes(player)) {
+        this.results.push(player);
+      }
     });
   }
 
@@ -40,13 +49,22 @@ function getRandomArbitrary(min: number, max: number) {
 const RaceTrack = observer(({ race }: { race: Race }) => {
   return (
     <>
-      {race.racers.map((player) => (
-        <div
-          className=""
-          key={player.name}
-          style={{ marginLeft: `${player.position}%` }}
-        >
-          {player.name}
+      <div className="bg-green-300 w-full">
+        {race.racers.map((player) => (
+          <div
+            className=""
+            key={player.name}
+            style={{ marginLeft: `${player.position}%` }}
+          >
+            {player.name}
+          </div>
+        ))}
+      </div>
+      <h2>Results:</h2>
+      <br />
+      {race.results.map((racer, i) => (
+        <div key={racer.name}>
+          {i + 1} : {racer.name}
         </div>
       ))}
     </>
@@ -69,19 +87,32 @@ const race = new Race([
 ]);
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    setInterval(() => {
-      race.increaseTimer();
-    }, 50);
+  const [raceStarted, setRaceStarted] = useState(false);
 
-    setInterval(() => {
-      race.adjustSpeed();
-    }, 1000);
-  }, []);
+  useEffect(() => {
+    if (raceStarted) {
+      setInterval(() => {
+        race.increaseTimer();
+      }, 50);
+
+      setInterval(() => {
+        race.adjustSpeed();
+      }, 1000);
+    }
+  }, [raceStarted]);
 
   return (
-    <div className="w-screen h-screen bg-green-300 relative">
+    <div className="w-screen h-screen">
       <main>
+        {!raceStarted && (
+          <button
+            onClick={() => {
+              setRaceStarted(true);
+            }}
+          >
+            Start race
+          </button>
+        )}
         <RaceTrack race={race} />
       </main>
     </div>
