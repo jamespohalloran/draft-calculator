@@ -37,7 +37,7 @@ class Race {
 
   adjustSpeed() {
     this.racers.forEach((player) => {
-      player.speed = getRandomArbitrary(0.1, 0.5);
+      player.speed = getRandomArbitrary(0.05, 0.5);
     });
   }
 }
@@ -52,31 +52,38 @@ const RaceTrack = observer(
       <>
         <div className="bg-green-300 w-full">
           {race.racers.map((player) => (
-            <div
-              className=""
-              key={player.name}
-              style={{ marginLeft: `${player.position}%`, width: "30px" }}
-            >
-              {player.name}
-              <img
-                className="w-full"
-                src={
-                  running && !race.results.find((r) => r.name == player.name)
-                    ? "/run.gif"
-                    : "idle.png"
-                }
-              />
-              {/* <Runner /> */}
+            <div key={player.name} className="w-full border border-inherit">
+              <div
+                className=""
+                style={{ marginLeft: `${player.position}%`, width: "30px" }}
+              >
+                {player.name}
+                <img
+                  className="w-full"
+                  src={
+                    running && !race.results.find((r) => r.name == player.name)
+                      ? "/run.gif"
+                      : "idle.png"
+                  }
+                />
+                {/* <Runner /> */}
+              </div>
             </div>
           ))}
         </div>
-        <h2>Results:</h2>
-        <br />
-        {race.results.map((racer, i) => (
-          <div key={racer.name}>
-            {i + 1} : {racer.name}
-          </div>
-        ))}
+        <table className="table-auto">
+          <thead>
+            <tr>
+              <th>Results</th>
+            </tr>
+          </thead>
+          {race.results.map((racer, i) => (
+            <tr key={racer.name}>
+              <td>{i + 1}</td>
+              <td>{racer.name}</td>
+            </tr>
+          ))}
+        </table>
       </>
     );
   }
