@@ -30,6 +30,11 @@ class Race {
       player.position = Math.min(player.position + player.speed, raceSize);
 
       if (player.position >= raceSize && !this.results.includes(player)) {
+        if (this.results.length == 0) {
+          let cheer = new Audio("/success-fanfare-trumpets-6185.mp3");
+          cheer.play();
+        }
+
         this.results.push(player);
       }
     });
@@ -109,6 +114,9 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (raceStarted) {
+      let whistle = new Audio("/065594_coach-whistle-88613.mp3");
+      whistle.play();
+
       race.increaseTimer();
       setInterval(() => {
         race.increaseTimer();
@@ -124,8 +132,11 @@ const Home: NextPage = () => {
   return (
     <div className="w-screen h-screen">
       <main>
-        {!raceStarted && (
-          <div className="m-0.5">
+        <div className="m-0.5">
+          <h1 className="font-medium leading-tight text-2xl mt-0 mb-2 text-black-600">
+            The League - Draft randomizer
+          </h1>
+          {!raceStarted && (
             <button
               className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
               onClick={() => {
@@ -134,8 +145,9 @@ const Home: NextPage = () => {
             >
               Start race
             </button>
-          </div>
-        )}
+          )}
+        </div>
+
         <RaceTrack race={race} running={raceStarted} />
       </main>
     </div>
