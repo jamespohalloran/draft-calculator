@@ -16,6 +16,8 @@ class Racer {
 
 const raceSize = 95;
 
+const speedModifider = 0.001;
+
 class Race {
   framesPassed = 0;
 
@@ -27,7 +29,10 @@ class Race {
     this.framesPassed += 1;
 
     this.racers.forEach((player) => {
-      player.position = Math.min(player.position + player.speed, raceSize);
+      player.position = Math.min(
+        player.position + player.speed * speedModifider,
+        raceSize
+      );
 
       if (player.position >= raceSize && !this.results.includes(player)) {
         if (this.results.length == 0) {
@@ -42,7 +47,7 @@ class Race {
 
   adjustSpeed() {
     this.racers.forEach((player) => {
-      player.speed = getRandomArbitrary(0.05, 0.5);
+      player.speed = getRandomArbitrary(0.05, 200);
     });
   }
 }
