@@ -46,30 +46,41 @@ function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-const RaceTrack = observer(({ race }: { race: Race }) => {
-  return (
-    <>
-      <div className="bg-green-300 w-full">
-        {race.racers.map((player) => (
-          <div
-            className=""
-            key={player.name}
-            style={{ marginLeft: `${player.position}%` }}
-          >
-            {player.name}
+const RaceTrack = observer(
+  ({ race, running }: { race: Race; running: boolean }) => {
+    return (
+      <>
+        <div className="bg-green-300 w-full">
+          {race.racers.map((player) => (
+            <div
+              className=""
+              key={player.name}
+              style={{ marginLeft: `${player.position}%`, width: "50px" }}
+            >
+              {player.name}
+              <img
+                className="w-full"
+                src={
+                  running && !race.results.find((r) => r.name == player.name)
+                    ? "/run.gif"
+                    : "idle.png"
+                }
+              />
+              {/* <Runner /> */}
+            </div>
+          ))}
+        </div>
+        <h2>Results:</h2>
+        <br />
+        {race.results.map((racer, i) => (
+          <div key={racer.name}>
+            {i + 1} : {racer.name}
           </div>
         ))}
-      </div>
-      <h2>Results:</h2>
-      <br />
-      {race.results.map((racer, i) => (
-        <div key={racer.name}>
-          {i + 1} : {racer.name}
-        </div>
-      ))}
-    </>
-  );
-});
+      </>
+    );
+  }
+);
 
 const race = new Race([
   new Racer("Brodie"),
@@ -91,10 +102,12 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (raceStarted) {
+      race.increaseTimer();
       setInterval(() => {
         race.increaseTimer();
       }, 50);
 
+      race.adjustSpeed();
       setInterval(() => {
         race.adjustSpeed();
       }, 1000);
@@ -105,15 +118,18 @@ const Home: NextPage = () => {
     <div className="w-screen h-screen">
       <main>
         {!raceStarted && (
-          <button
-            onClick={() => {
-              setRaceStarted(true);
-            }}
-          >
-            Start race
-          </button>
+          <div className="m-0.5">
+            <button
+              className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              onClick={() => {
+                setRaceStarted(true);
+              }}
+            >
+              Start race
+            </button>
+          </div>
         )}
-        <RaceTrack race={race} />
+        <RaceTrack race={race} running={raceStarted} />
       </main>
     </div>
   );
