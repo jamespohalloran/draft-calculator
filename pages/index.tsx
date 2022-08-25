@@ -23,7 +23,9 @@ class Race {
 
   results: Racer[] = [];
 
-  constructor(public racers: Racer[]) {}
+  constructor(public racers: Racer[]) {
+    makeAutoObservable(this);
+  }
 
   increaseTimer() {
     this.framesPassed += 1;
@@ -56,10 +58,76 @@ function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
+const PlayerModal = observer(({ race }: { race: Race }) => {
+  return (
+    <>
+      <div className="modal">
+        <div className="modal-box space-y-2">
+          <h1>Setup Race</h1>
+          {race.racers.map((player, index) => (
+            <div key={index} className="flex">
+              <input
+                key={index}
+                type="text"
+                placeholder={`User ${index + 1}'s name`}
+                value={player.name}
+                onChange={(e) => {
+                  player.name = e.target.value.replace(" ", "_");
+                }}
+                className="flex-1 text-center input input-bordered center"
+              />
+              <button
+                onClick={() => {
+                  race.racers.splice(index, 1);
+                }}
+                className="ml-2 flex-none btn btn-square btn-outline"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          ))}
+          <div className="text-center space-x-2">
+            <button
+              onClick={() => (race.racers = [...race.racers, new Racer("")])}
+              className="place-self-center btn btn-xs sm:btn-sm md:btn-md lg:btn-lg"
+            >
+              Add New User
+            </button>
+            <div className="modal-action">
+              <label htmlFor="my-modal" className="btn">
+                Start Race
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+});
+
 const RaceTrack = observer(
   ({ race, running }: { race: Race; running: boolean }) => {
     return (
       <>
+        <label htmlFor="my-modal" className="btn modal-button">
+          Race Settings
+        </label>
+        {/* Put this part before </body> tag */}
+        <input type="checkbox" id="my-modal" className="modal-toggle" />
+        <PlayerModal race={race} />
         <div className="bg-green-300 w-full">
           {race.racers.map((player) => (
             <div key={player.name} className="w-full border border-inherit">
