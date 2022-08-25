@@ -204,22 +204,24 @@ const RaceTrack = observer(
           ))}
         </div>
 
-        <div className="m-2">
-          <table className="table-auto table w-full">
-            <thead>
-              <tr>
-                <th>Results</th>
-                <th></th>
-              </tr>
-            </thead>
-            {race.results.map((racer, i) => (
-              <tr key={racer.id}>
-                <td>{i + 1}</td>
-                <td>{racer.name}</td>
-              </tr>
-            ))}
-          </table>
-        </div>
+        {running && (
+          <div className="m-2">
+            <table className="table-auto table">
+              <thead>
+                <tr>
+                  <th>Results</th>
+                  <th></th>
+                </tr>
+              </thead>
+              {race.racers.map((_, i) => (
+                <tr key={i}>
+                  <th>{i + 1}</th>
+                  <td>{race.results.length > i ? race.results[i].name : ""}</td>
+                </tr>
+              ))}
+            </table>
+          </div>
+        )}
       </>
     );
   }
