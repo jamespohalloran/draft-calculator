@@ -55,7 +55,7 @@ const RaceTrack = observer(
             <div
               className=""
               key={player.name}
-              style={{ marginLeft: `${player.position}%`, width: "50px" }}
+              style={{ marginLeft: `${player.position}%`, width: "30px" }}
             >
               {player.name}
               <img
@@ -91,8 +91,8 @@ const race = new Race([
   new Racer("Mike"),
   new Racer("Chad"),
   new Racer("Dave"),
-  new Racer("Andrew M"),
-  new Racer("Andrew B"),
+  new Racer("AndrewMac"),
+  new Racer("AndrewBurt"),
   new Racer("Ryan"),
   new Racer("Josh"),
 ]);
