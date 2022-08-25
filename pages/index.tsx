@@ -14,6 +14,36 @@ class Racer {
   }
 }
 
+const CACHE_SETTINGS_KEY = "race-settings";
+class CacheManager {
+  constructor() {}
+
+  public loadFromState() {
+    const cache = JSON.parse(localStorage?.getItem(CACHE_SETTINGS_KEY) || "{}");
+
+    if (!cache?.racers) {
+      race.racers.push(new Racer("Player_1"));
+      race.racers.push(new Racer("Player_2"));
+      race.racers.push(new Racer("Player_3"));
+      race.racers.push(new Racer("Player_4"));
+      race.racers.push(new Racer("Player_5"));
+      race.racers.push(new Racer("Player_6"));
+      race.racers.push(new Racer("Player_7"));
+      race.racers.push(new Racer("Player_8"));
+      race.racers.push(new Racer("Player_9"));
+      race.racers.push(new Racer("Player_10"));
+      return;
+    }
+    (cache.racers || []).forEach((racer: { name: string }) => {
+      race.racers.push(new Racer(racer.name));
+    });
+  }
+
+  public updateCache() {
+    localStorage.setItem(CACHE_SETTINGS_KEY, JSON.stringify(race));
+  }
+}
+
 const raceSize = 95;
 
 const speedModifider = 0.001;
@@ -54,6 +84,23 @@ class Race {
   }
 }
 
+const race = new Race([
+  // new Racer("Brodie"),
+  // new Racer("James"),
+  // new Racer("Chris"),
+  // new Racer("Colin"),
+  // new Racer("Ernesto"),
+  // new Racer("Mike"),
+  // new Racer("Chad"),
+  // new Racer("Dave"),
+  // new Racer("AndrewMac"),
+  // new Racer("AndrewBurt"),
+  // new Racer("Ryan"),
+  // new Racer("Josh"),
+]);
+
+const cacheManager = new CacheManager();
+
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
@@ -73,12 +120,14 @@ const PlayerModal = observer(({ race }: { race: Race }) => {
                 value={player.name}
                 onChange={(e) => {
                   player.name = e.target.value.replace(" ", "_");
+                  cacheManager.updateCache();
                 }}
                 className="flex-1 text-center input input-bordered center"
               />
               <button
                 onClick={() => {
                   race.racers.splice(index, 1);
+                  cacheManager.updateCache();
                 }}
                 className="ml-2 flex-none btn btn-square btn-outline"
               >
@@ -101,7 +150,10 @@ const PlayerModal = observer(({ race }: { race: Race }) => {
           ))}
           <div className="text-center space-x-2">
             <button
-              onClick={() => (race.racers = [...race.racers, new Racer("")])}
+              onClick={() => {
+                race.racers = [...race.racers, new Racer("")];
+                cacheManager.updateCache();
+              }}
               className="place-self-center btn btn-xs sm:btn-sm md:btn-md lg:btn-lg"
             >
               Add New User
@@ -164,23 +216,14 @@ const RaceTrack = observer(
   }
 );
 
-const race = new Race([
-  new Racer("Brodie"),
-  new Racer("James"),
-  new Racer("Chris"),
-  new Racer("Colin"),
-  new Racer("Ernesto"),
-  new Racer("Mike"),
-  new Racer("Chad"),
-  new Racer("Dave"),
-  new Racer("AndrewMac"),
-  new Racer("AndrewBurt"),
-  new Racer("Ryan"),
-  new Racer("Josh"),
-]);
-
 const Home: NextPage = () => {
   const [raceStarted, setRaceStarted] = useState(false);
+
+  useEffect(() => {
+    if (typeof localStorage !== "undefined") {
+      cacheManager.loadFromState();
+    }
+  }, []);
 
   useEffect(() => {
     if (raceStarted) {
