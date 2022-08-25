@@ -3,11 +3,17 @@ import { useEffect, useState } from "react";
 import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react";
 
+function uniqueID() {
+  return Math.floor(Math.random() * Date.now());
+}
+
 class Racer {
   speed = 0;
   position = 0;
+  id: number;
   constructor(public name: string) {
     makeAutoObservable(this);
+    this.id = uniqueID();
   }
   setSpeed(speed: number) {
     this.speed = speed;
@@ -112,9 +118,8 @@ const PlayerModal = observer(({ race }: { race: Race }) => {
         <div className="modal-box space-y-2">
           <h1>Setup Race</h1>
           {race.racers.map((player, index) => (
-            <div key={index} className="flex">
+            <div key={player.id} className="flex">
               <input
-                key={index}
                 type="text"
                 placeholder={`User ${index + 1}'s name`}
                 value={player.name}
@@ -179,7 +184,7 @@ const RaceTrack = observer(
         <PlayerModal race={race} />
         <div className="bg-green-300 w-full">
           {race.racers.map((player) => (
-            <div key={player.name} className="w-full border border-inherit">
+            <div key={player.id} className="w-full border border-inherit">
               <div
                 className=""
                 style={{ marginLeft: `${player.position}%`, width: "30px" }}
@@ -198,19 +203,23 @@ const RaceTrack = observer(
             </div>
           ))}
         </div>
-        <table className="table-auto">
-          <thead>
-            <tr>
-              <th>Results</th>
-            </tr>
-          </thead>
-          {race.results.map((racer, i) => (
-            <tr key={racer.name}>
-              <td>{i + 1}</td>
-              <td>{racer.name}</td>
-            </tr>
-          ))}
-        </table>
+
+        <div className="m-2">
+          <table className="table-auto table w-full">
+            <thead>
+              <tr>
+                <th>Results</th>
+                <th></th>
+              </tr>
+            </thead>
+            {race.results.map((racer, i) => (
+              <tr key={racer.id}>
+                <td>{i + 1}</td>
+                <td>{racer.name}</td>
+              </tr>
+            ))}
+          </table>
+        </div>
       </>
     );
   }
