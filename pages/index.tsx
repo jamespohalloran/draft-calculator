@@ -50,7 +50,7 @@ class CacheManager {
   }
 }
 
-const raceSize = 95;
+const raceSize = 100;
 
 const speedModifider = 0.001;
 
@@ -159,12 +159,12 @@ const PlayerModal = observer(({ race }: { race: Race }) => {
                 race.racers = [...race.racers, new Racer("")];
                 cacheManager.updateCache();
               }}
-              className="place-self-center btn btn-xs sm:btn-sm md:btn-md lg:btn-lg"
+              className="place-self-center text-white btn btn-xs sm:btn-sm md:btn-md lg:btn-lg"
             >
               Add New User
             </button>
             <div className="modal-action">
-              <label htmlFor="my-modal" className="btn">
+              <label htmlFor="my-modal" className="text-white btn">
                 Done
               </label>
             </div>
@@ -175,6 +175,8 @@ const PlayerModal = observer(({ race }: { race: Race }) => {
   );
 });
 
+const RACER_WIDTH = 30;
+
 const RaceTrack = observer(
   ({ race, running }: { race: Race; running: boolean }) => {
     return (
@@ -182,31 +184,43 @@ const RaceTrack = observer(
         {/* Put this part before </body> tag */}
         <input type="checkbox" id="my-modal" className="modal-toggle" />
         <PlayerModal race={race} />
-        <div className="bg-green-300 w-full">
-          {race.racers.map((player) => (
-            <div key={player.id} className="w-full border border-inherit">
-              <div
-                className=""
-                style={{ marginLeft: `${player.position}%`, width: "30px" }}
-              >
-                {player.name}
-                <img
-                  className="w-full"
-                  src={
-                    running && !race.results.find((r) => r.name == player.name)
-                      ? "/run.gif"
-                      : "idle.png"
-                  }
-                />
-                {/* <Runner /> */}
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="p-2">
+          <div className="pr-8 checkered">
+            <div className="bg-green-600 w-full">
+              {race.racers.map((player) => {
+                const isDone = race.results.find((r) => r.name == player.name);
 
+                return (
+                  <div key={player.id} className="w-full border border-inherit">
+                    <div
+                      className=""
+                      style={{
+                        marginLeft: `${player.position}%`,
+                        width: `${RACER_WIDTH}px`,
+                      }}
+                    >
+                      <span
+                        className={`badge text-white ${
+                          isDone && "float-right"
+                        }`}
+                      >
+                        {player.name}
+                      </span>
+                      <img
+                        className="w-full"
+                        src={running && !isDone ? "/run.gif" : "idle.png"}
+                      />
+                      {/* <Runner /> */}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
         {running && (
           <div className="m-2">
-            <table className="table-auto table">
+            <table className="table-auto table rounded-sm">
               <thead>
                 <tr>
                   <th>Results</th>
@@ -214,7 +228,7 @@ const RaceTrack = observer(
                 </tr>
               </thead>
               {race.racers.map((_, i) => (
-                <tr key={i}>
+                <tr key={i} className="bg-white text-black outline">
                   <th>{i + 1}</th>
                   <td>{race.results.length > i ? race.results[i].name : ""}</td>
                 </tr>
@@ -254,16 +268,16 @@ const Home: NextPage = () => {
   }, [raceStarted]);
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen min-h-screen bg-green-800">
       <main>
-        <div className="m-0.5">
-          <h1 className="font-medium leading-tight text-2xl mt-0 mb-2 text-black-600">
+        <div className="p-2">
+          <h1 className="font-medium leading-tight text-2xl text-black-600">
             The League - Draft randomizer
           </h1>
           {!raceStarted && (
-            <div className="space-x-2">
+            <div className="space-x-2 mt-4">
               <button
-                className="btn align-top"
+                className="btn align-top text-white"
                 onClick={() => {
                   setRaceStarted(true);
                 }}
@@ -272,7 +286,7 @@ const Home: NextPage = () => {
               </button>
               <label
                 htmlFor="my-modal"
-                className="btn btn-outline modal-button"
+                className="btn btn-outline modal-button text-white"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
