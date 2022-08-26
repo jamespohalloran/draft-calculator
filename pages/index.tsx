@@ -233,7 +233,7 @@ const RaceTrack = observer(
                     >
                       <span
                         className={`badge text-white ${
-                          isDone ? "float-right" : ""
+                          running ? "float-right" : ""
                         }`}
                       >
                         {player.name}
