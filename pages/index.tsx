@@ -100,7 +100,7 @@ function getRandomArbitrary(min: number, max: number) {
 const PlayerModal = observer(({ race }: { race: Race }) => {
   return (
     <>
-      <div className="modal">
+      <div className="modal text-white">
         <div className="modal-box space-y-2">
           <div className="mb-6">
             <label className="block text-white text-md font-bold mb-2">
@@ -305,8 +305,8 @@ const Home: NextPage = () => {
   return (
     <div className="w-screen min-h-screen bg-green-800">
       <main>
-        <div className="p-2 px-4 flex bg-neutral">
-          <h1 className="self-center flex-none font-medium leading-tight text-2xl text-black-600 align-middle">
+        <div className="p-2 px-4 flex bg-neutral text-white">
+          <h1 className="self-center flex-none font-medium leading-tight text-2xl align-middle">
             DraftOrders
           </h1>
           <div className="self-center flex-none ml-2">
@@ -376,7 +376,7 @@ const Home: NextPage = () => {
 
         <RaceTrack race={race} running={raceStarted} />
       </main>
-      <footer className="footer items-center p-4 bg-neutral text-neutral-content">
+      <footer className="footer items-center p-4 bg-neutral text-white">
         <div className="items-center grid-flow-col">
           <svg
             width={36}

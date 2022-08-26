@@ -25,7 +25,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           ],
         }}
       />
-      <Component {...pageProps} />
+      <div data-theme="dark">
+        <Component {...pageProps} />
+      </div>
     </>
   );
 }
