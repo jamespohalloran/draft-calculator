@@ -2,6 +2,8 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react";
+import Script from "next/script";
+import KofiButton from "kofi-button";
 
 function uniqueID() {
   return Math.floor(Math.random() * Date.now());
@@ -392,8 +394,14 @@ const Home: NextPage = () => {
           <p>
             Developed by <a href="http://johalloran.dev">James OHalloran.</a>
           </p>
-          <p>Copyright © 2022 - All right reserved</p>
+
+          <KofiButton color="#0a9396" title="Tip the dev" kofiID="S6S5EMUTW" />
+          <div className="">
+            {" "}
+            <p>Copyright © 2022 - All right reserved</p>
+          </div>
         </div>
+
         <div className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
           <a href="https://twitter.com/jamespohalloran">
             <svg
@@ -411,5 +419,4 @@ const Home: NextPage = () => {
     </div>
   );
 };
-
 export default Home;
