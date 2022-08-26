@@ -305,7 +305,7 @@ const Home: NextPage = () => {
   return (
     <div className="w-screen min-h-screen bg-green-800">
       <main>
-        <div className="p-2 flex bg-neutral">
+        <div className="p-2 px-4 flex bg-neutral">
           <h1 className="self-center flex-none font-medium leading-tight text-2xl text-black-600 align-middle">
             DraftOrders
           </h1>
