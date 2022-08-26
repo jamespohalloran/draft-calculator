@@ -43,6 +43,7 @@ class CacheManager {
     (cache.racers || []).forEach((racer: { name: string }) => {
       race.racers.push(new Racer(racer.name));
     });
+    race.speedModifier = cache.speedModifier;
   }
 
   public updateCache() {
@@ -52,14 +53,12 @@ class CacheManager {
 
 const raceSize = 100;
 
-const speedModifider = 0.001;
-
 class Race {
   framesPassed = 0;
 
   results: Racer[] = [];
 
-  constructor(public racers: Racer[]) {
+  constructor(public racers: Racer[], public speedModifier: number) {
     makeAutoObservable(this);
   }
 
@@ -68,7 +67,7 @@ class Race {
 
     this.racers.forEach((player) => {
       player.position = Math.min(
-        player.position + player.speed * speedModifider,
+        player.position + player.speed * this.speedModifier,
         raceSize
       );
 
@@ -83,27 +82,14 @@ class Race {
     });
   }
 
-  adjustSpeed() {
+  adjustPlayerSpeeds() {
     this.racers.forEach((player) => {
       player.speed = getRandomArbitrary(0.05, 200);
     });
   }
 }
 
-const race = new Race([
-  // new Racer("Brodie"),
-  // new Racer("James"),
-  // new Racer("Chris"),
-  // new Racer("Colin"),
-  // new Racer("Ernesto"),
-  // new Racer("Mike"),
-  // new Racer("Chad"),
-  // new Racer("Dave"),
-  // new Racer("AndrewMac"),
-  // new Racer("AndrewBurt"),
-  // new Racer("Ryan"),
-  // new Racer("Josh"),
-]);
+const race = new Race([], 0.001);
 
 const cacheManager = new CacheManager();
 
@@ -116,58 +102,102 @@ const PlayerModal = observer(({ race }: { race: Race }) => {
     <>
       <div className="modal">
         <div className="modal-box space-y-2">
-          <h1>Setup Race</h1>
-          {race.racers.map((player, index) => (
-            <div key={player.id} className="flex">
-              <input
-                type="text"
-                placeholder={`User ${index + 1}'s name`}
-                value={player.name}
-                onChange={(e) => {
-                  player.name = e.target.value.replace(" ", "_");
-                  cacheManager.updateCache();
-                }}
-                className="flex-1 text-center input input-bordered center"
-              />
-              <button
-                onClick={() => {
-                  race.racers.splice(index, 1);
-                  cacheManager.updateCache();
-                }}
-                className="ml-2 flex-none btn btn-squar btn btn-outline"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+          <div className="mb-6">
+            <label className="block text-white text-md font-bold mb-2">
+              Users
+            </label>
+            {race.racers.map((player, index) => (
+              <div key={player.id} className="flex mb-2">
+                <input
+                  type="text"
+                  placeholder={`User ${index + 1}'s name`}
+                  value={player.name}
+                  onChange={(e) => {
+                    player.name = e.target.value.replace(" ", "_");
+                  }}
+                  className="flex-1 text-center input input-bordered center"
+                />
+                <button
+                  onClick={() => {
+                    race.racers.splice(index, 1);
+                  }}
+                  className="ml-2 my-0 flex-none btn btn-squar btn btn-outline"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          ))}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
           <div className="text-center space-x-2">
             <button
               onClick={() => {
                 race.racers = [...race.racers, new Racer("")];
-                cacheManager.updateCache();
               }}
               className="place-self-center text-white btn btn-outline"
             >
-              Add New User
+              Add New User{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="ml-1"
+                width={"16px"}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 5v14m7-7H5"
+                />
+              </svg>
             </button>
-            <div className="modal-action">
-              <label htmlFor="my-modal" className="text-white btn btn-outline">
-                Done
-              </label>
+          </div>
+          <div className="">
+            <label className="block text-white text-md font-bold mb-2">
+              Race Speed
+            </label>
+            <input
+              type="range"
+              min={0.0005}
+              max={0.005}
+              defaultValue={race.speedModifier}
+              className="range"
+              step={0.0005}
+              onChange={({ target: { value } }) => {
+                race.speedModifier = parseFloat(value);
+              }}
+            />
+            <div className="w-full flex justify-between text-xs px-2">
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
             </div>
+          </div>
+
+          <div
+            className="mt-6 modal-action"
+            onClick={() => {
+              cacheManager.updateCache();
+            }}
+          >
+            <label htmlFor="my-modal" className="text-white btn btn-outline">
+              Done
+            </label>
           </div>
         </div>
       </div>
@@ -201,7 +231,7 @@ const RaceTrack = observer(
                     >
                       <span
                         className={`badge text-white ${
-                          isDone && "float-right"
+                          isDone ? "float-right" : ""
                         }`}
                       >
                         {player.name}
@@ -256,14 +286,19 @@ const Home: NextPage = () => {
       whistle.play();
 
       race.increaseTimer();
-      setInterval(() => {
+      const timer = setInterval(() => {
         race.increaseTimer();
       }, 50);
 
-      race.adjustSpeed();
-      setInterval(() => {
-        race.adjustSpeed();
+      race.adjustPlayerSpeeds();
+      const speedAdjustment = setInterval(() => {
+        race.adjustPlayerSpeeds();
       }, 1000);
+
+      return () => {
+        clearInterval(timer);
+        clearInterval(speedAdjustment);
+      };
     }
   }, [raceStarted]);
 
@@ -272,7 +307,7 @@ const Home: NextPage = () => {
       <main>
         <div className="p-2 flex bg-neutral">
           <h1 className="self-center flex-none font-medium leading-tight text-2xl text-black-600 align-middle">
-            Draft randomizer
+            DraftOrders
           </h1>
           <div className="self-center flex-none ml-2">
             <svg
@@ -291,32 +326,42 @@ const Home: NextPage = () => {
             </svg>
           </div>
           <div className="flex-auto"></div>
-          {!raceStarted && (
-            <div className="flex-none space-x-2">
-              <label
-                htmlFor="my-modal"
-                className="btn btn-outline modal-button text-white"
+
+          <div className="flex-none space-x-2">
+            <label
+              htmlFor="my-modal"
+              className="btn btn-outline modal-button text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </label>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </label>
+            {raceStarted ? (
+              <button
+                className="btn-error btn btn-outline align-top text-white"
+                onClick={() => {
+                  window.location.reload();
+                }}
+              >
+                Reset race
+              </button>
+            ) : (
               <button
                 className="btn btn-outline align-top text-white"
                 onClick={() => {
@@ -325,8 +370,8 @@ const Home: NextPage = () => {
               >
                 Start race
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <RaceTrack race={race} running={raceStarted} />
@@ -345,7 +390,7 @@ const Home: NextPage = () => {
             <path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z" />
           </svg>
           <p>
-            Developed by <a href="http://johalloran.dev">James OHalloran</a>
+            Developed by <a href="http://johalloran.dev">James OHalloran.</a>
           </p>
           <p>Copyright © 2022 - All right reserved</p>
         </div>
