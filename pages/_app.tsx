@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         title="DraftOrders"
         titleTemplate="DraftOrders"
         defaultTitle="DraftOrders"
-        description="Randomly Generate your Fantasy League's Draft Order, With a Little Fanfare."
+        description="Randomly Generate your Fantasy Football League's Draft Order, With a Little Fanfare."
         canonical="https://www.draftorders.com/"
         openGraph={{
           url: "https://www.draftorders.com/",
