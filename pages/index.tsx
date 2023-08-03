@@ -76,6 +76,7 @@ class Race {
       if (player.position >= raceSize && !this.results.includes(player)) {
         if (this.results.length == 0) {
           let cheer = new Audio("/success-fanfare-trumpets-6185.mp3");
+          cheer.volume = 0.08;
           cheer.play();
         }
 
@@ -285,6 +286,8 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (raceStarted) {
       let whistle = new Audio("/065594_coach-whistle-88613.mp3");
+      //make the volume lower
+      whistle.volume = 0.08;
       whistle.play();
 
       race.increaseTimer();
@@ -311,7 +314,7 @@ const Home: NextPage = () => {
           <h1 className="self-center flex-none font-medium leading-tight text-2xl align-middle">
             DraftOrders
           </h1>
-          <div className="self-center flex-none ml-2">
+          <div className="self-center flex-none ml-2 invisible md:visible">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -330,6 +333,24 @@ const Home: NextPage = () => {
           <div className="flex-auto"></div>
 
           <div className="flex-none space-x-2">
+            <a target="_blank" href="/about">
+              <div className="inline-block text-white cursor-pointer">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                  />
+                </svg>
+              </div>
+            </a>
             <label
               htmlFor="my-modal"
               className="btn btn-outline modal-button text-white"
@@ -398,7 +419,7 @@ const Home: NextPage = () => {
           <KofiButton color="#0a9396" title="Tip the dev" kofiID="S6S5EMUTW" />
           <div className="">
             {" "}
-            <p>Copyright © 2022 - All right reserved</p>
+            <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
           </div>
         </div>
 
