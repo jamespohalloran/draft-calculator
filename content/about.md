@@ -23,7 +23,11 @@ Each time you click "Start the Race", it will reset and give a new ordering on t
 
 ## Is it free to use?
 
-Yup! If you get some value out of it, [donations are always appreciated](https://ko-fi.com/johalloran), or sharing the tool with a friend or online always helps too!
+Yup! If you get some value out of it, donations are always appreciated:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S5EMUTW)
+
+or sharing the tool with a friend or online always helps too!
 
 ## How Can I Livestream The Draft?
 
