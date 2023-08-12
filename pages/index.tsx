@@ -4,6 +4,7 @@ import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react";
 import Script from "next/script";
 import KofiButton from "kofi-button";
+import dynamic from "next/dynamic";
 
 function uniqueID() {
   return Math.floor(Math.random() * Date.now());
@@ -274,6 +275,8 @@ const RaceTrack = observer(
   }
 );
 
+const Game = dynamic(() => import("../components/game"), { ssr: false });
+
 const Home: NextPage = () => {
   const [raceStarted, setRaceStarted] = useState(false);
 
@@ -396,7 +399,7 @@ const Home: NextPage = () => {
             )}
           </div>
         </div>
-
+        <Game />
         <RaceTrack race={race} running={raceStarted} />
       </main>
       <footer className="footer items-center p-4 bg-neutral text-white">
