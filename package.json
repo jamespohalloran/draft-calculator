@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@pebble-engine/core": "^0.0.24",
     "@tailwindcss/typography": "^0.5.4",
     "daisyui": "^2.24.0",
     "kofi-button": "^1.1.1",
@@ -19,12 +20,15 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "three": "^0.161.0"
   },
   "devDependencies": {
+    "@pebble-engine/studio": "^0.0.27",
     "@types/node": "18.7.13",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
+    "@types/three": "^0.160.0",
     "autoprefixer": "^10.4.8",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.5",
