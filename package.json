@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@pebble-engine/core": "^0.0.24",
+    "@pebble-engine/core": "0.0.0-20240131175351",
     "@tailwindcss/typography": "^0.5.4",
     "daisyui": "^2.24.0",
     "kofi-button": "^1.1.1",

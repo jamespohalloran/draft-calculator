@@ -4,6 +4,7 @@ import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react";
 import Script from "next/script";
 import KofiButton from "kofi-button";
+import App from "./App";
 
 function uniqueID() {
   return Math.floor(Math.random() * Date.now());
@@ -396,8 +397,8 @@ const Home: NextPage = () => {
             )}
           </div>
         </div>
-
-        <RaceTrack race={race} running={raceStarted} />
+        {/* <RaceTrack race={race} running={raceStarted} /> */}
+        <App />
       </main>
       <footer className="footer items-center p-4 bg-neutral text-white">
         <div className="items-center grid-flow-col">
