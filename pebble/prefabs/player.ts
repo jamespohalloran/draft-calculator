@@ -20,6 +20,7 @@ export default class Player extends BaseObject {
 
   private clock: THREE.Clock;
 
+  private complete = false;
   public constructor(initialProps: BaseObjectParams) {
     super(initialProps);
     this.clock = new THREE.Clock();
@@ -30,12 +31,33 @@ export default class Player extends BaseObject {
   }
 
   public override update(delta: number) {
-    this.threeObj!.position.z -= this.speed * delta;
+    if (!this.complete) {
+      this.checkForComplete();
+    }
 
-    this.threeObj!.rotation.z =
-      Math.sin(this.wobbleSpeed * this.clock.getElapsedTime()) *
-      this.wobbleIntensity;
+    if (!this.complete) {
+      this.threeObj!.position.z = Math.max(
+        -3,
+        this.threeObj!.position.z - this.speed * delta
+      );
+
+      this.threeObj!.rotation.z =
+        Math.sin(this.wobbleSpeed * this.clock.getElapsedTime()) *
+        this.wobbleIntensity;
+    }
   }
+
+  private checkForComplete() {
+    if (this.isComplete()) {
+      this.complete = true;
+      this.threeObj!.position.z = -3;
+      this.threeObj!.rotation.z = 0;
+    }
+  }
+
+  private isComplete = () => {
+    return this.threeObj!.position.z <= -3;
+  };
 
   protected override async getThreeObject() {
     try {
