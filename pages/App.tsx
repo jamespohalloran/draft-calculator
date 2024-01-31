@@ -23,6 +23,7 @@ function App() {
   useEffect(() => {
     //setup Three renderer
     const renderer = new THREE.WebGLRenderer();
+    renderer.setClearAlpha(0);
     renderer.setSize(window.innerWidth, window.innerHeight, false);
 
     //setup Three scene
@@ -57,10 +58,11 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div ref={threeContainer}></div>
+    <div className="bg-gradient-to-b from-blue-300 to-blue-600">
+      {/* gradient background */}
+      <div ref={threeContainer} className=""></div>
       {loaded ? <></> : <div>Loading</div>}
-    </>
+    </div>
   );
 }
 
