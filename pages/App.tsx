@@ -4,18 +4,11 @@ import myScene from "../pebble/scenes/race.json";
 import React from "react";
 import * as THREE from "three";
 import { PebbleScene } from "@pebble-engine/core";
+import * as prefabs from "../pebble/prefabs";
 
 //REPLACE THE ACTUAL PATH TO PREFABS
 
 //import prefabs in same format as below
-const prefabs = {
-  car: () => import("../pebble/prefabs/car"),
-  flycam: () => import("../pebble/prefabs/flycam"),
-  player: () => import("../pebble/prefabs/player"),
-};
-
-// const prefabs = import.meta.glob("../pebble/prefabs/*.ts");
-
 function App() {
   const threeContainer = React.useRef<HTMLDivElement>(null);
 

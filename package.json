@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@pebble-engine/core": "0.0.0-20240131175351",
+    "@pebble-engine/core": "0.0.25",
     "@tailwindcss/typography": "^0.5.4",
     "daisyui": "^2.24.0",
     "kofi-button": "^1.1.1",
@@ -24,7 +24,7 @@
     "three": "^0.161.0"
   },
   "devDependencies": {
-    "@pebble-engine/studio": "^0.0.27",
+    "@pebble-engine/studio": "^0.0.28",
     "@types/node": "18.7.13",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
