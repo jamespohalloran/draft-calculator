@@ -44,14 +44,15 @@ function App() {
       if (bound) {
         container!.appendChild(renderer.domElement);
       }
+      setLoaded(true);
     };
     setupScene();
 
     return () => {
       //if container contains renderer, remove it
       if (container!.contains(renderer.domElement)) {
-        setLoaded(true);
         container!.removeChild(renderer.domElement);
+        setLoaded(false);
       }
       bound = false;
     };
