@@ -398,7 +398,7 @@ const Home: NextPage = () => {
           </div>
         </div>
         {/* <RaceTrack race={race} running={raceStarted} /> */}
-        <App />
+        <App race={race} running={raceStarted} />
       </main>
       <footer className="footer items-center p-4 bg-neutral text-white">
         <div className="items-center grid-flow-col">

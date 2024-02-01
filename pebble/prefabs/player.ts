@@ -20,10 +20,19 @@ export default class Player extends BaseObject {
 
   private clock: THREE.Clock;
 
+  private _running = false;
+
   private complete = false;
   public constructor(initialProps: BaseObjectParams) {
     super(initialProps);
     this.clock = new THREE.Clock();
+  }
+
+  public get running() {
+    return this._running;
+  }
+  public set running(value: boolean) {
+    this._running = value;
   }
 
   public override start(_pebbleScene: any): void {
@@ -31,6 +40,9 @@ export default class Player extends BaseObject {
   }
 
   public override update(delta: number) {
+    if (!this.running) {
+      return;
+    }
     if (!this.complete) {
       this.checkForComplete();
     }
