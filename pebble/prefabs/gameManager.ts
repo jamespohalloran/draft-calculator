@@ -29,6 +29,9 @@ export default class GameManager extends BaseObject {
       //   },
     } as any;
 
+    const spacing = 0.5;
+    const playerCount = 10;
+    const initialXOffset = -3;
     //instantiate players at x positions 0-9, with a promise.all
     const instantiatePlayer = async ({ i }: any) => {
       // clone initialProps, but replace threeObj.position.x with i
@@ -38,7 +41,7 @@ export default class GameManager extends BaseObject {
           ...initialPlayerProps.threeObj,
           position: {
             ...initialPlayerProps.threeObj.position,
-            x: i - 3,
+            x: i * spacing + initialXOffset,
           },
         },
       };
@@ -49,7 +52,7 @@ export default class GameManager extends BaseObject {
     };
 
     Promise.all(
-      Array.from({ length: 10 }, (_, i) => i).map((i) =>
+      Array.from({ length: playerCount }, (_, i) => i).map((i) =>
         instantiatePlayer({ i })
       )
     );
