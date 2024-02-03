@@ -145,6 +145,7 @@ export default class GameManager extends BaseReactiveObject {
     whistle.play();
     this.running = true;
 
+    this.adjustPlayerSpeeds();
     this.players.forEach((player) => {
       player.running = true;
     });
