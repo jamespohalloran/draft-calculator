@@ -30,6 +30,8 @@ export default class GameManager extends BaseReactiveObject {
   private _gameState: GameState;
   private _speedModifier: number = 0.0025;
 
+  private speedAdjustmentInterval: NodeJS.Timeout;
+
   private _running: boolean = false;
   public constructor({
     name,
@@ -48,6 +50,10 @@ export default class GameManager extends BaseReactiveObject {
       running: this._running,
       speedModifier: this._speedModifier,
     };
+
+    this.speedAdjustmentInterval = setInterval(() => {
+      this.adjustPlayerSpeeds();
+    }, 1000);
   }
 
   public get speedModifier() {
@@ -143,4 +149,18 @@ export default class GameManager extends BaseReactiveObject {
       player.running = true;
     });
   }
+
+  private adjustPlayerSpeeds() {
+    this.players.forEach((player) => {
+      player.speed = getRandomArbitrary(0.05, 200) * this._speedModifier;
+    });
+  }
+
+  public override destroy() {
+    clearInterval(this.speedAdjustmentInterval);
+  }
+}
+
+function getRandomArbitrary(min: number, max: number) {
+  return Math.random() * (max - min) + min;
 }
