@@ -85,9 +85,9 @@ export default class GameManager extends BaseReactiveObject {
     } else {
       //slowly circle camera around players
       this._camera!.position.y = 3;
-      this._camera!.position.x = Math.sin(Date.now() * 0.00005) * 5;
-      this._camera!.position.z = Math.cos(Date.now() * 0.00005) * 5;
-      this._camera!.lookAt(0, 0, 0);
+      this._camera!.position.x = Math.sin(Date.now() * 0.00005) * 7;
+      this._camera!.position.z = Math.cos(Date.now() * 0.00005) * 7;
+      this._camera!.lookAt(0, 0, 2);
     }
   }
 
@@ -112,7 +112,7 @@ export default class GameManager extends BaseReactiveObject {
   public start(_pebbleScene: PebbleScene): void {
     const initialPlayerProps = {
       threeObj: {
-        position: { x: -1, y: 1, z: 3 },
+        position: { x: -1, y: 0, z: 3 },
         rotation: { x: 0, y: 180, z: 0 },
         scale: { x: 0.25, y: 0.25, z: 0.25 },
       },
