@@ -29,10 +29,14 @@ export default class Player extends BaseReactiveObject {
 
   private _running = false;
 
-  private complete = false;
+  private _complete = false;
   public constructor(initialProps: BaseObjectParams) {
     super(initialProps);
     this.clock = new THREE.Clock();
+  }
+
+  public get complete() {
+    return this._complete;
   }
 
   public get running() {
@@ -48,11 +52,8 @@ export default class Player extends BaseReactiveObject {
     if (!this.running) {
       return;
     }
-    if (!this.complete) {
-      this.checkForComplete();
-    }
 
-    if (!this.complete) {
+    if (!this._complete) {
       this.threeObj!.position.z = Math.max(
         -3,
         this.threeObj!.position.z - this.speed * delta
@@ -64,17 +65,15 @@ export default class Player extends BaseReactiveObject {
     }
   }
 
-  private checkForComplete() {
-    if (this.isComplete()) {
-      this.complete = true;
-      this.threeObj!.position.z = -3;
-      this.threeObj!.rotation.z = 0;
-      this.showPlaceLabel(3); // TODO - replace with index of player in game manager
-    }
-  }
-
-  private isComplete = () => {
+  public isAtFinish = () => {
     return this.threeObj!.position.z <= -3;
+  };
+
+  public setComplete = (place: number) => {
+    this._complete = true;
+    this.threeObj!.position.z = -3;
+    this.threeObj!.rotation.z = 0;
+    this.showPlaceLabel(place); // TODO - replace with index of player in game manager
   };
 
   private showPlaceLabel = (place: number) => {

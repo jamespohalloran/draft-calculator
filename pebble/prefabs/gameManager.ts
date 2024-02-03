@@ -54,6 +54,12 @@ export default class GameManager extends BaseReactiveObject {
     this.updateGameState();
   }
 
+  public override update(delta: number) {
+    if (this._running) {
+      this.checkForComplete();
+    }
+  }
+
   private updateGameState() {
     this._gameState = {
       players: this.players,
@@ -121,6 +127,16 @@ export default class GameManager extends BaseReactiveObject {
     ).then(() => {
       this.updateGameState();
     });
+  }
+
+  private checkForComplete() {
+    this.players
+      .filter((p) => !p.complete)
+      .forEach((player) => {
+        if (player.isAtFinish()) {
+          player.setComplete(this.players.filter((p) => p.complete).length + 1);
+        }
+      });
   }
 
   startRace() {
