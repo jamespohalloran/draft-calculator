@@ -21,13 +21,14 @@ class BaseReactiveObject extends BaseObject {
 interface GameState {
   players: Player[];
   results: any[];
-  speed: number;
   running: boolean;
+  speedModifier: number;
 }
 
 export default class GameManager extends BaseReactiveObject {
   private players: Player[] = [];
   private _gameState: GameState;
+  private _speedModifier: number = 0.0025;
 
   private _running: boolean = false;
   public constructor({
@@ -44,9 +45,18 @@ export default class GameManager extends BaseReactiveObject {
     this._gameState = {
       players: [],
       results: [],
-      speed: 1,
       running: this._running,
+      speedModifier: this._speedModifier,
     };
+  }
+
+  public get speedModifier() {
+    return this._speedModifier;
+  }
+
+  public setSpeedModifier(value: number) {
+    this._speedModifier = value;
+    this.updateGameState();
   }
 
   public set running(value: boolean) {
@@ -60,8 +70,8 @@ export default class GameManager extends BaseReactiveObject {
     this._gameState = {
       players: this.players,
       results: [], // Add logic to update results if needed
-      speed: 1, // Add logic to update speed if needed
       running: this._running,
+      speedModifier: this._speedModifier,
     };
 
     this.notifySubscribers();
@@ -97,6 +107,7 @@ export default class GameManager extends BaseReactiveObject {
       // clone initialProps, but replace threeObj.position.x with i
       const newProps = {
         ...initialPlayerProps,
+        name: `Player ${i + 1}`,
         threeObj: {
           ...initialPlayerProps.threeObj,
           position: {
@@ -116,7 +127,9 @@ export default class GameManager extends BaseReactiveObject {
       Array.from({ length: playerCount }, (_, i) => i).map((i) =>
         instantiatePlayer({ i })
       )
-    );
+    ).then(() => {
+      this.updateGameState();
+    });
   }
 
   startRace() {
