@@ -1,9 +1,14 @@
-import { BaseObjectParams, BaseObject, editable } from "@pebble-engine/core";
+import { BaseObjectParams, editable } from "@pebble-engine/core";
 import * as THREE from "three";
+//@ts-ignore
 import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+//@ts-ignore
 import * as SkeletonUtils from "three/addons/utils/SkeletonUtils.js";
 
-export default class Player extends BaseObject {
+import { Text } from "troika-three-text";
+import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
+
+export default class Player extends BaseReactiveObject {
   static prefab: GLTF;
 
   @editable
@@ -19,6 +24,7 @@ export default class Player extends BaseObject {
   public assetName: string = "/minigames/character/character_dog.gltf";
 
   private clock: THREE.Clock;
+  private label: Text;
 
   private _running = false;
 
@@ -35,9 +41,7 @@ export default class Player extends BaseObject {
     this._running = value;
   }
 
-  public override start(_pebbleScene: any): void {
-    //
-  }
+  public override start(_pebbleScene: any): void {}
 
   public override update(delta: number) {
     if (!this.running) {
@@ -75,12 +79,39 @@ export default class Player extends BaseObject {
     try {
       const prefab = await this.loadPrefab();
       const newobj = SkeletonUtils.clone(prefab.scene);
+
+      this.label = new Text();
+      this.label.rotation.y = -Math.PI / 2;
+
+      newobj!.add(this.label);
+
+      // Set properties to configure:
+      this.label.text = this.name;
+      this.label.fontSize = 0.4;
+      this.label.position.x = 0;
+      this.label.position.y = 2.3;
+      this.label.position.z = 0;
+      this.label.anchorX = "center";
+      this.label.color = 0x000000;
+
+      this.label.sync();
+
       return newobj;
     } catch (e) {
       console.error(e);
       return;
     }
   }
+
+  public setName = (name: string) => {
+    this.name = name;
+    this.updateLabel(name);
+  };
+
+  private updateLabel = (text: string) => {
+    this.label.text = text;
+    this.notifySubscribers();
+  };
 
   loadPrefab = async (): Promise<GLTF> => {
     const loader = new GLTFLoader();

@@ -19,7 +19,7 @@ export const PlayerModal = ({ gameManager }: { gameManager: GameManager }) => {
                   placeholder={`User ${index + 1}'s name`}
                   value={player.name}
                   onChange={(e) => {
-                    player.name = e.target.value.replace(" ", "_");
+                    player.setName(e.target.value.replace(" ", "_"));
                   }}
                   className="flex-1 text-center input input-bordered center"
                 />

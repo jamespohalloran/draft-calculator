@@ -1,22 +1,6 @@
-import { BaseObject, BaseObjectParams, PebbleScene } from "@pebble-engine/core";
+import { PebbleScene } from "@pebble-engine/core";
 import Player from "./player";
-
-class BaseReactiveObject extends BaseObject {
-  private subscribers = new Set<() => void>();
-
-  constructor(props: BaseObjectParams) {
-    super(props);
-  }
-
-  public subscribe(callback: () => void) {
-    this.subscribers.add(callback);
-    return () => this.subscribers.delete(callback);
-  }
-
-  public notifySubscribers() {
-    this.subscribers.forEach((callback) => callback());
-  }
-}
+import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
 
 interface GameState {
   players: Player[];
@@ -66,8 +50,6 @@ export default class GameManager extends BaseReactiveObject {
   }
 
   public set running(value: boolean) {
-    debugger;
-
     this._running = value;
     this.updateGameState();
   }
@@ -127,6 +109,9 @@ export default class GameManager extends BaseReactiveObject {
       await _pebbleScene.instantiate(newObj);
       _pebbleScene.scene.add(newObj.threeObj!);
       this.players.push(newObj);
+      newObj.subscribe(() => {
+        this.updateGameState();
+      });
     };
 
     Promise.all(
