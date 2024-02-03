@@ -1,6 +1,7 @@
 import { PebbleScene } from "@pebble-engine/core";
 import Player from "./player";
 import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
+import * as THREE from "three";
 
 interface GameState {
   players: Player[];
@@ -13,7 +14,12 @@ export default class GameManager extends BaseReactiveObject {
   private players: Player[] = [];
   private _gameState: GameState;
   private _speedModifier: number = 0.0025;
+  private _camera?: THREE.Camera;
 
+  private _initialCamTransform?: {
+    position: THREE.Vector3;
+    quaternion: THREE.Quaternion;
+  };
   private speedAdjustmentInterval: NodeJS.Timeout;
 
   private _running: boolean = false;
@@ -57,6 +63,31 @@ export default class GameManager extends BaseReactiveObject {
   public override update(delta: number) {
     if (this._running) {
       this.checkForComplete();
+
+      const rotSpeed = 3.5;
+
+      //slerp with qm.slerpQuaternions( qa, qb, t )
+      debugger;
+      this._camera!.quaternion.slerp(
+        this._initialCamTransform!.quaternion,
+        delta * rotSpeed
+      );
+
+      // Apply the interpolated rotation to your object
+      // yourObject.setRotationFromQuaternion(interpolatedRotation);
+
+      this._camera!.position.lerp(
+        this._initialCamTransform!.position!,
+        delta * rotSpeed
+      );
+
+      //  this._camera!.lookAt(0, 0, 0);
+    } else {
+      //slowly circle camera around players
+      this._camera!.position.y = 3;
+      this._camera!.position.x = Math.sin(Date.now() * 0.00005) * 5;
+      this._camera!.position.z = Math.cos(Date.now() * 0.00005) * 5;
+      this._camera!.lookAt(0, 0, 0);
     }
   }
 
@@ -127,6 +158,12 @@ export default class GameManager extends BaseReactiveObject {
     ).then(() => {
       this.updateGameState();
     });
+
+    this._camera = _pebbleScene.camera!;
+    this._initialCamTransform = {
+      position: this._camera.position.clone(),
+      quaternion: this._camera.quaternion.clone(),
+    };
   }
 
   private checkForComplete() {
