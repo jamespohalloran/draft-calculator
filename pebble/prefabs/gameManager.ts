@@ -33,6 +33,7 @@ export default class GameManager extends BaseReactiveObject {
     name,
     threeObj,
     _id,
+    ...initialProps
   }: {
     name: string;
     _id: string;
@@ -41,7 +42,8 @@ export default class GameManager extends BaseReactiveObject {
     console.log("GameManager constructor");
     super({ name, threeObj, _id });
 
-    this.mapDimensions = new THREE.Vector3(10, 10, 10);
+    this.mapDimensions =
+      (initialProps as any).mapDimensions || new THREE.Vector3(10, 10, 10);
     this.mapOffset = new THREE.Vector3(0, 0, 0);
 
     this._gameState = {
@@ -61,14 +63,17 @@ export default class GameManager extends BaseReactiveObject {
   }
 
   protected override getGizmos() {
-    debugger;
     // Create a box geometry
     const boxGeometry = new THREE.BoxGeometry(
       this.mapDimensions.x,
       this.mapDimensions.y,
       this.mapDimensions.z
     );
-    boxGeometry.translate(this.mapOffset.x, this.mapOffset.y, this.mapOffset.z);
+    boxGeometry.translate(
+      this.mapOffset.x / 2,
+      this.mapOffset.y / 2,
+      this.mapOffset.z / 2
+    );
 
     // Create a wireframe material
     const wireframeMaterial = new THREE.MeshBasicMaterial({
@@ -96,7 +101,6 @@ export default class GameManager extends BaseReactiveObject {
       const rotSpeed = 3.5;
 
       //slerp with qm.slerpQuaternions( qa, qb, t )
-      debugger;
       this._camera!.quaternion.slerp(
         this._initialCamTransform!.quaternion,
         delta * rotSpeed
@@ -141,7 +145,7 @@ export default class GameManager extends BaseReactiveObject {
   public start(_pebbleScene: PebbleScene): void {
     const initialPlayerProps = {
       threeObj: {
-        position: { x: -1, y: 0, z: 3 },
+        position: { x: -1, y: 0, z: this.mapDimensions.z / 2 },
         rotation: { x: 0, y: 180, z: 0 },
         scale: { x: 0.25, y: 0.25, z: 0.25 },
       },
@@ -153,9 +157,10 @@ export default class GameManager extends BaseReactiveObject {
       //   },
     } as any;
 
-    const spacing = 0.5;
     const playerCount = 10;
-    const initialXOffset = -3;
+    const initialXOffset = this.mapDimensions.x / 2;
+    const spacing = this.mapDimensions.x / playerCount;
+
     //instantiate players at x positions 0-9, with a promise.all
     const instantiatePlayer = async ({ i }: any) => {
       // clone initialProps, but replace threeObj.position.x with i
@@ -166,7 +171,7 @@ export default class GameManager extends BaseReactiveObject {
           ...initialPlayerProps.threeObj,
           position: {
             ...initialPlayerProps.threeObj.position,
-            x: i * spacing + initialXOffset,
+            x: -i * spacing + initialXOffset,
           },
         },
       };

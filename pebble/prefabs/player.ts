@@ -54,10 +54,7 @@ export default class Player extends BaseReactiveObject {
     }
 
     if (!this._complete) {
-      this.threeObj!.position.z = Math.max(
-        -3,
-        this.threeObj!.position.z - this.speed * delta
-      );
+      this.threeObj!.position.z - this.speed * delta;
 
       this.threeObj!.rotation.z =
         Math.sin(this.wobbleSpeed * this.clock.getElapsedTime()) *
