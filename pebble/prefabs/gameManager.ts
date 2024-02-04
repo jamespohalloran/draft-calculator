@@ -22,13 +22,15 @@ export default class GameManager extends BaseReactiveObject {
   @editable({ type: "vector3" })
   public mapDimensions: THREE.Vector3;
 
-  private _initialCamTransform?: {
+  private _targetCamTransform?: {
     position: THREE.Vector3;
     quaternion: THREE.Quaternion;
   };
   private speedAdjustmentInterval: NodeJS.Timeout;
 
   private _running: boolean = false;
+
+  private _pebbleScene?: PebbleScene;
   public constructor({
     name,
     threeObj,
@@ -100,9 +102,22 @@ export default class GameManager extends BaseReactiveObject {
 
       const rotSpeed = 3.5;
 
+      //calculate targetCamPos. The cam should be at x0, z0, and it should see all of mapDimensions x&z
+      const fieldOfView =
+        (this._camera! as THREE.PerspectiveCamera).fov * (Math.PI / 180);
+
+      var height = Math.tan(fieldOfView / 2) * this.mapDimensions.z;
+      var width = Math.sin(fieldOfView / 2) * this.mapDimensions.x;
+
+      this._targetCamTransform?.position.set(
+        0,
+        Math.max(height, width) + 0.25,
+        0
+      );
+
       //slerp with qm.slerpQuaternions( qa, qb, t )
       this._camera!.quaternion.slerp(
-        this._initialCamTransform!.quaternion,
+        this._targetCamTransform!.quaternion,
         delta * rotSpeed
       );
 
@@ -110,7 +125,7 @@ export default class GameManager extends BaseReactiveObject {
       // yourObject.setRotationFromQuaternion(interpolatedRotation);
 
       this._camera!.position.lerp(
-        this._initialCamTransform!.position!,
+        this._targetCamTransform!.position!,
         delta * rotSpeed
       );
 
@@ -143,9 +158,10 @@ export default class GameManager extends BaseReactiveObject {
   public addPlayer() {}
 
   public start(_pebbleScene: PebbleScene): void {
+    this._pebbleScene = _pebbleScene;
     const initialPlayerProps = {
       threeObj: {
-        position: { x: -1, y: 0, z: this.mapDimensions.z / 2 },
+        position: { x: -1, y: 0.2, z: this.mapDimensions.z / 2 },
         rotation: { x: 0, y: 180, z: 0 },
         scale: { x: 0.25, y: 0.25, z: 0.25 },
       },
@@ -194,7 +210,7 @@ export default class GameManager extends BaseReactiveObject {
     });
 
     this._camera = _pebbleScene.camera!;
-    this._initialCamTransform = {
+    this._targetCamTransform = {
       position: this._camera.position.clone(),
       quaternion: this._camera.quaternion.clone(),
     };
@@ -204,8 +220,10 @@ export default class GameManager extends BaseReactiveObject {
     this.players
       .filter((p) => !p.complete)
       .forEach((player) => {
-        if (player.isAtFinish()) {
+        const endPos = -this.mapDimensions.z / 2;
+        if (player.threeObj!.position.z <= endPos) {
           player.setComplete(this.players.filter((p) => p.complete).length + 1);
+          player.threeObj!.position.z = endPos;
         }
       });
   }

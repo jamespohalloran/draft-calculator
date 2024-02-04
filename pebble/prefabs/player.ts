@@ -54,7 +54,7 @@ export default class Player extends BaseReactiveObject {
     }
 
     if (!this._complete) {
-      this.threeObj!.position.z - this.speed * delta;
+      this.threeObj!.position.z -= this.speed * delta;
 
       this.threeObj!.rotation.z =
         Math.sin(this.wobbleSpeed * this.clock.getElapsedTime()) *
@@ -62,13 +62,8 @@ export default class Player extends BaseReactiveObject {
     }
   }
 
-  public isAtFinish = () => {
-    return this.threeObj!.position.z <= -3;
-  };
-
   public setComplete = (place: number) => {
     this._complete = true;
-    this.threeObj!.position.z = -3;
     this.threeObj!.rotation.z = 0;
     this.showPlaceLabel(place); // TODO - replace with index of player in game manager
   };
