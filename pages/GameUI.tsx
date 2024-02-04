@@ -3,6 +3,7 @@ import { GameManager } from "../pebble/prefabs";
 import React, { useEffect } from "react";
 import { Header } from "./components/Header";
 import { PlayerModal } from "./components/PlayerModal";
+import { useGameState } from "./utils/gameState";
 
 export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
   const gameManager = pebbleScene.objects.find(
@@ -31,8 +32,6 @@ export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
           </div>
         </main>
       </div>
-      <input type="checkbox" id="my-modal" className="modal-toggle" />
-      <PlayerModal gameManager={gameManager} />
     </>
   );
 };
