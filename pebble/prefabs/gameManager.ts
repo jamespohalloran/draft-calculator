@@ -1,4 +1,4 @@
-import { PebbleScene } from "@pebble-engine/core";
+import { PebbleScene, editable } from "@pebble-engine/core";
 import Player from "./player";
 import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
 import * as THREE from "three";
@@ -16,6 +16,12 @@ export default class GameManager extends BaseReactiveObject {
   private _speedModifier: number = 0.0025;
   private _camera?: THREE.Camera;
 
+  @editable({ type: "vector3" })
+  public mapOffset: THREE.Vector3;
+
+  @editable({ type: "vector3" })
+  public mapDimensions: THREE.Vector3;
+
   private _initialCamTransform?: {
     position: THREE.Vector3;
     quaternion: THREE.Quaternion;
@@ -32,7 +38,11 @@ export default class GameManager extends BaseReactiveObject {
     _id: string;
     threeObj: any;
   }) {
+    console.log("GameManager constructor");
     super({ name, threeObj, _id });
+
+    this.mapDimensions = new THREE.Vector3(10, 10, 10);
+    this.mapOffset = new THREE.Vector3(0, 0, 0);
 
     this._gameState = {
       players: [],
@@ -48,6 +58,25 @@ export default class GameManager extends BaseReactiveObject {
 
   public get speedModifier() {
     return this._speedModifier;
+  }
+
+  protected override getGizmos() {
+    debugger;
+    // Create a box geometry
+    const boxGeometry = new THREE.BoxGeometry(
+      this.mapDimensions.x,
+      this.mapDimensions.y,
+      this.mapDimensions.z
+    );
+    boxGeometry.translate(this.mapOffset.x, this.mapOffset.y, this.mapOffset.z);
+
+    // Create a wireframe material
+    const wireframeMaterial = new THREE.MeshBasicMaterial({
+      wireframe: true,
+      color: 0x00ff00,
+    });
+
+    return [new THREE.Mesh(boxGeometry, wireframeMaterial)];
   }
 
   public setSpeedModifier(value: number) {
