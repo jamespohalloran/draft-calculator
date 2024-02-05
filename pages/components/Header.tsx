@@ -41,9 +41,9 @@ export const Header = ({ gameManager }: { gameManager: GameManager }) => {
       </div>
       <div className="flex-auto"></div>
 
-      <div className="flex-none space-x-2">
-        <a target="_blank" href="/about" className="align-middle">
-          <div className="inline-block text-white  cursor-pointer">
+      <div className="flex flex-row space-x-2 [&>*]:m-auto">
+        <a target="_blank" href="/about" className="text-black">
+          <div className=" text-white  cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -95,7 +95,7 @@ export function PlayerModalDialogue({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <div variant="outline" className="inline-block">
+        <div variant="outline" className="text-black">
           <label
             htmlFor="my-modal"
             className="btn btn-outline modal-button cursor-pointer text-white align-middle"
