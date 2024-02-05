@@ -9,20 +9,23 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import KofiButton from "kofi-button";
 
 export function IntroModal() {
   return (
     <div>
       <AlertDialog defaultOpen={true}>
         <AlertDialogTrigger asChild>
-          <div className=" text-white  cursor-pointer">
+          <div
+            className="text-white cursor-pointer"
+            style={{ cursor: "pointer" }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 cursor-pointer info-btn"
             >
               <path
                 strokeLinecap="round"
@@ -32,7 +35,7 @@ export function IntroModal() {
             </svg>
           </div>
         </AlertDialogTrigger>
-        <AlertDialogContent className="h-[90vh] overflow-scroll">
+        <AlertDialogContent className="max-h-[90vh] overflow-scroll">
           <AlertDialogHeader>
             <AlertDialogTitle>
               <div>Welcome to Draft Orders!</div>
@@ -53,6 +56,11 @@ export function IntroModal() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
+            <KofiButton
+              color="#0a9396"
+              title="Tip the dev"
+              kofiID="S6S5EMUTW"
+            />
             <AlertDialogAction>Get Started</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

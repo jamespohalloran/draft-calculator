@@ -2,7 +2,6 @@ import { PebbleScene } from "@pebble-engine/core";
 import { GameManager } from "../pebble/prefabs";
 import React, { useEffect } from "react";
 import { Header } from "./components/Header";
-import { IntroModal } from "components/IntroModal";
 import { useGameState } from "./utils/gameState";
 import { State } from "pebble/prefabs/gameManager";
 import { Button } from "@/components/ui/button";
@@ -112,7 +111,7 @@ function PlayerModalDialogue({
         }
       }}
     >
-      <AlertDialogContent className="h-[90vh] overflow-scroll">
+      <AlertDialogContent className="max-h-[90vh] overflow-scroll">
         <AlertDialogHeader>
           <AlertDialogTitle>Race Settings</AlertDialogTitle>
           <AlertDialogDescription>
@@ -120,7 +119,6 @@ function PlayerModalDialogue({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
