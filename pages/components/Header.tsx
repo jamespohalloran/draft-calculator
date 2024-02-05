@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { PlayerModal } from "./PlayerModal";
+import { State } from "pebble/prefabs/gameManager";
 
 export const Header = ({ gameManager }: { gameManager: GameManager }) => {
   const gameState = useGameState(gameManager);
@@ -62,7 +63,7 @@ export const Header = ({ gameManager }: { gameManager: GameManager }) => {
         </a>
         <PlayerModalDialogue gameManager={gameManager} />
 
-        {gameState.running ? (
+        {gameState.state === State.race ? (
           <Button
             variant={"destructive"}
             className="btn-error btn btn-outline align-top text-white"

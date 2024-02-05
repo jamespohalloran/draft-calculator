@@ -6,10 +6,16 @@ import * as THREE from "three";
 interface GameState {
   players: Player[];
   results: any[];
-  running: boolean;
+  state: State;
   speedModifier: number;
 }
 
+export enum State {
+  intro,
+  playerSelect,
+  race,
+  results,
+}
 export default class GameManager extends BaseReactiveObject {
   private players: Player[] = [];
   private _gameState: GameState;
@@ -28,7 +34,7 @@ export default class GameManager extends BaseReactiveObject {
   };
   private speedAdjustmentInterval: NodeJS.Timeout;
 
-  private _running: boolean = false;
+  private state: State = State.intro;
 
   private _pebbleScene?: PebbleScene;
   public constructor({
@@ -51,7 +57,7 @@ export default class GameManager extends BaseReactiveObject {
     this._gameState = {
       players: [],
       results: [],
-      running: this._running,
+      state: this.state,
       speedModifier: this._speedModifier,
     };
 
@@ -92,12 +98,16 @@ export default class GameManager extends BaseReactiveObject {
   }
 
   public set running(value: boolean) {
-    this._running = value;
+    if (value) {
+      this.state = State.race;
+    } else {
+      this.state = State.intro;
+    }
     this.updateGameState();
   }
 
   public override update(delta: number) {
-    if (this._running) {
+    if (this.state === State.race) {
       this.checkForComplete();
 
       const rotSpeed = 3.5;
@@ -131,11 +141,23 @@ export default class GameManager extends BaseReactiveObject {
 
       //  this._camera!.lookAt(0, 0, 0);
     } else {
-      //slowly circle camera around players
-      this._camera!.position.y = 3;
-      this._camera!.position.x = Math.sin(Date.now() * 0.00005) * 7;
-      this._camera!.position.z = Math.cos(Date.now() * 0.00005) * 7;
-      this._camera!.lookAt(0, 0, 2);
+      if (this._gameState.state === State.playerSelect) {
+        // move camera in front of all the players
+        this._camera!.position.y = 1;
+        this._camera!.position.x = 0;
+        this._camera!.position.z = 2;
+        this._camera?.lookAt(
+          this.players.length
+            ? this.players[this.players.length / 2].threeObj!.position
+            : new THREE.Vector3(0, 0, 0)
+        );
+      } else {
+        //slowly circle camera around players
+        this._camera!.position.y = 3;
+        this._camera!.position.x = Math.sin(Date.now() * 0.00005) * 7;
+        this._camera!.position.z = Math.cos(Date.now() * 0.00005) * 7;
+        this._camera!.lookAt(0, 0, 2);
+      }
     }
   }
 
@@ -143,7 +165,7 @@ export default class GameManager extends BaseReactiveObject {
     this._gameState = {
       players: this.players,
       results: [], // Add logic to update results if needed
-      running: this._running,
+      state: this.state,
       speedModifier: this._speedModifier,
     };
 
