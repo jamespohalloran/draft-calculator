@@ -16,36 +16,36 @@ export const PlayerModal = ({ gameManager }: { gameManager: GameManager }) => {
             <label className="block text-white text-md font-bold mb-2">
               Users
             </label>
-            <div className="space-y-2">
+            <div className=" grid grid-cols-2 gap-4">
               {gameState.players.map((player, index) => (
-                <div
-                  key={player._id}
-                  className="flex w-full max-w-sm items-center space-x-2"
-                >
-                  <Input
-                    placeholder={`User ${index + 1}'s name`}
-                    value={player.name}
-                    onChange={(e) => {
-                      player.setName(e.target.value.replace(" ", "_"));
-                    }}
-                  />{" "}
-                  <Button>
-                    {" "}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </Button>
+                <div key={player._id}>
+                  <div className="flex w-full items-center space-x-2">
+                    <Input
+                      placeholder={`User ${index + 1}'s name`}
+                      value={player.name}
+                      onChange={(e) => {
+                        player.setName(e.target.value.replace(" ", "_"));
+                      }}
+                      className="flex-auto"
+                    />{" "}
+                    <Button>
+                      {" "}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
