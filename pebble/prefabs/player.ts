@@ -4,6 +4,8 @@ import * as THREE from "three";
 import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 //@ts-ignore
 import * as SkeletonUtils from "three/addons/utils/SkeletonUtils.js";
+//@ts-ignore
+import { createDerivedMaterial } from "troika-three-utils";
 
 import { Text } from "troika-three-text";
 import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
@@ -103,6 +105,13 @@ export default class Player extends BaseReactiveObject {
       const prefab = await this.loadPrefab();
       const newobj = SkeletonUtils.clone(prefab.scene);
 
+      const labelMat = create3dLabelMaterial(new THREE.MeshBasicMaterial(), {
+        uniforms: {
+          u_positionOffsetX: { value: 0 },
+          u_positionOffsetY: { value: 0 },
+        },
+      });
+
       this.placeLabel = new Text();
       this.placeLabel.visible = false;
       this.placeLabel.rotation.y = -Math.PI / 2;
@@ -114,6 +123,7 @@ export default class Player extends BaseReactiveObject {
       this.placeLabel.position.x = 0;
       this.placeLabel.position.y = 3;
       this.placeLabel.position.z = 0;
+      this.placeLabel.material = labelMat;
       this.placeLabel.sync();
       newobj!.add(this.placeLabel);
 
@@ -130,6 +140,8 @@ export default class Player extends BaseReactiveObject {
       this.label.position.z = 0;
       this.label.anchorX = "center";
       this.label.color = 0x000000;
+
+      this.label.material = labelMat;
 
       this.label.sync();
 
@@ -176,4 +188,25 @@ export default class Player extends BaseReactiveObject {
       );
     });
   };
+}
+
+function create3dLabelMaterial(
+  baseMaterial: THREE.Material,
+  options: Partial<any> = {}
+): THREE.ShaderMaterial {
+  return createDerivedMaterial(baseMaterial, {
+    uniforms: options.uniforms,
+    vertexMainOutro: `
+            vec4 modelViewPosition = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+            vec3 modelViewScale = vec3(
+                length(modelViewMatrix[0].xyz),
+                length(modelViewMatrix[1].xyz),
+                length(modelViewMatrix[2].xyz)
+            );
+
+            modelViewPosition.xyz += position * modelViewScale;
+            gl_Position = projectionMatrix * modelViewPosition;
+        `,
+    ...options,
+  });
 }
