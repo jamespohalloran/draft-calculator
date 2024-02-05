@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "kenvector_future";
+  src: url("/fonts/kenvector_future_thin.ttf");
+}
+
+* {
+  font-family: "kenvector_future", sans-serif;
+}
+
 footer {
   background-color: rgb(0, 0, 0, 0.3);
 }
