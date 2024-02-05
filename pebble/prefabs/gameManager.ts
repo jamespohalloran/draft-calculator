@@ -18,6 +18,7 @@ export enum State {
 }
 export default class GameManager extends BaseReactiveObject {
   private players: Player[] = [];
+  private firstUpdate: boolean = true;
   private _gameState: GameState;
   private _speedModifier: number = 0.0025;
   private _camera?: THREE.Camera;
@@ -161,12 +162,27 @@ export default class GameManager extends BaseReactiveObject {
         this._camera!.quaternion.slerp(target.quaternion, delta * rotSpeed);
       } else {
         //slowly circle camera around players
-        this._camera!.position.y = 3;
-        this._camera!.position.x = Math.sin(Date.now() * 0.00005) * 7;
-        this._camera!.position.z = Math.cos(Date.now() * 0.00005) * 7;
-        this._camera!.lookAt(0, 0, 2);
+        const targetPos = new THREE.Vector3(
+          Math.sin(Date.now() * 0.00005) * 7,
+          3,
+          Math.cos(Date.now() * 0.00005) * 7
+        );
+        const lookatTarget = new THREE.Vector3(0, 0, 2);
+
+        if (this.firstUpdate) {
+          this._camera!.position.copy(targetPos);
+          this._camera!.lookAt(lookatTarget);
+        } else {
+          this._camera!.position.lerp(targetPos, delta * rotSpeed);
+
+          const target = this._camera!.clone();
+          target.lookAt(lookatTarget);
+          this._camera!.quaternion.slerp(target.quaternion, delta * rotSpeed);
+        }
       }
     }
+
+    this.firstUpdate = false;
   }
 
   private updateGameState() {

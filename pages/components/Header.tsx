@@ -131,7 +131,7 @@ export function PlayerModalDialogue({
           </label>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="h-[50vh] overflow-scroll">
+      <AlertDialogContent className="h-[90vh] overflow-scroll">
         <AlertDialogHeader>
           <AlertDialogTitle>Race Settings</AlertDialogTitle>
           <AlertDialogDescription>
