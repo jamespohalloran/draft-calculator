@@ -57,7 +57,7 @@ function App() {
     <>
       {loaded ? <GameUI pebbleScene={pebbleScene} /> : <div>Loading...</div>}
       <footer className="footer items-center p-4 bg-neutral text-white w-full absolute bottom-0">
-        <div className="items-center flex flex-row space-x-4 text-sm">
+        <div className="items-center flex flex-row space-x-2 text-sm">
           <p>
             Made with ❤️ by <a href="http://johalloran.dev">James OHalloran.</a>
           </p>
