@@ -2,8 +2,6 @@ import { PebbleScene } from "@pebble-engine/core";
 import { GameManager } from "../pebble/prefabs";
 import React, { useEffect } from "react";
 import { Header } from "./components/Header";
-import { PlayerModal } from "./components/PlayerModal";
-import { useGameState } from "./utils/gameState";
 import { IntroModal } from "components/IntroModal";
 
 export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {

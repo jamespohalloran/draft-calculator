@@ -94,7 +94,15 @@ export function PlayerModalDialogue({
   gameManager: GameManager;
 }) {
   return (
-    <AlertDialog>
+    <AlertDialog
+      onOpenChange={(open) => {
+        if (open) {
+          gameManager.setState(State.playerSelect);
+        } else {
+          gameManager.setState(State.intro);
+        }
+      }}
+    >
       <AlertDialogTrigger asChild>
         <div variant="outline" className="text-black">
           <label

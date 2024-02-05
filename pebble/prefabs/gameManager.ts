@@ -97,6 +97,11 @@ export default class GameManager extends BaseReactiveObject {
     this.updateGameState();
   }
 
+  public setState(state: State) {
+    this.state = state;
+    this.updateGameState();
+  }
+
   public set running(value: boolean) {
     if (value) {
       this.state = State.race;
@@ -107,10 +112,10 @@ export default class GameManager extends BaseReactiveObject {
   }
 
   public override update(delta: number) {
+    const rotSpeed = 3.5;
+
     if (this.state === State.race) {
       this.checkForComplete();
-
-      const rotSpeed = 3.5;
 
       //calculate targetCamPos. The cam should be at x0, z0, and it should see all of mapDimensions x&z
       const fieldOfView =
@@ -142,15 +147,18 @@ export default class GameManager extends BaseReactiveObject {
       //  this._camera!.lookAt(0, 0, 0);
     } else {
       if (this._gameState.state === State.playerSelect) {
-        // move camera in front of all the players
-        this._camera!.position.y = 1;
-        this._camera!.position.x = 0;
-        this._camera!.position.z = 2;
-        this._camera?.lookAt(
-          this.players.length
-            ? this.players[this.players.length / 2].threeObj!.position
-            : new THREE.Vector3(0, 0, 0)
-        );
+        const targetPos = new THREE.Vector3(0, 1, 2);
+
+        //lerp camera pos to targetPos
+        this._camera!.position.lerp(targetPos, delta * rotSpeed);
+
+        const lookatTarget = this.players.length
+          ? this.players[this.players.length / 2].threeObj!.position
+          : new THREE.Vector3(0, 0, 0);
+
+        const target = this._camera!.clone();
+        target.lookAt(lookatTarget);
+        this._camera!.quaternion.slerp(target.quaternion, delta * rotSpeed);
       } else {
         //slowly circle camera around players
         this._camera!.position.y = 3;
