@@ -17,7 +17,7 @@ export function IntroModal() {
         <AlertDialogContent className="h-[90vh] overflow-scroll">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              <h1>Draft Orders</h1>
+              <div>Welcome to Draft Orders!</div>
             </AlertDialogTitle>
             <AlertDialogDescription>
               {/* welcome message that describes draft orders, a random order generator */}
