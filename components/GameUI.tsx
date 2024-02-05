@@ -1,8 +1,8 @@
 import { PebbleScene } from "@pebble-engine/core";
 import { GameManager } from "../pebble/prefabs";
 import React, { useEffect } from "react";
-import { Header } from "./components/Header";
-import { useGameState } from "./utils/gameState";
+import { Header } from "./Header";
+import { useGameState } from "../utils/gameState";
 import { State } from "pebble/prefabs/gameManager";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { PlayerModal } from "./components/PlayerModal";
+import { PlayerModal } from "./PlayerModal";
 
 export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
   const gameManager = pebbleScene.objects.find(

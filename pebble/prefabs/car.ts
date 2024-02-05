@@ -2,6 +2,7 @@ import { BaseObject, editable } from "@pebble-engine/core";
 //@ts-ignore
 import * as SkeletonUtils from "three/addons/utils/SkeletonUtils.js";
 
+//@ts-ignore
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 export default class Car extends BaseObject {
@@ -10,7 +11,7 @@ export default class Car extends BaseObject {
   @editable({ type: "asset" })
   public assetName: string = "/city/car_sedan.gltf";
 
-  public constructor(initialProps) {
+  public constructor(initialProps: any) {
     super(initialProps);
   }
 

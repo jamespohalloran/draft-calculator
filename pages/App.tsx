@@ -5,7 +5,7 @@ import React from "react";
 import * as THREE from "three";
 import { PebbleScene } from "@pebble-engine/core";
 import * as prefabs from "../pebble/prefabs";
-import { GameUI } from "./GameUI";
+import { GameUI } from "../components/GameUI";
 import { Separator } from "@/components/ui/separator";
 import KofiButton from "kofi-button";
 

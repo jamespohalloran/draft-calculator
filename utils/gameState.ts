@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { GameManager } from "../../pebble/prefabs";
+import { GameManager } from "../pebble/prefabs";
 
 export const useGameState = (gameManager: GameManager) => {
   return useSyncExternalStore(

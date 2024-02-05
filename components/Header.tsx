@@ -1,5 +1,5 @@
 import React from "react";
-import { GameManager } from "../../pebble/prefabs";
+import { GameManager } from "../pebble/prefabs";
 import { useGameState } from "../utils/gameState";
 
 import { Button } from "@/components/ui/button";

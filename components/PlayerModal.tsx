@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { GameManager } from "../../pebble/prefabs";
+import { GameManager } from "../pebble/prefabs";
 import { useGameState } from "../utils/gameState";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
