@@ -209,7 +209,7 @@ export default class GameManager extends BaseReactiveObject {
       threeObj: {
         position: { x: -1, y: 0.2, z: this.mapDimensions.z / 2 },
         rotation: { x: 0, y: 180, z: 0 },
-        scale: { x: 0.25, y: 0.25, z: 0.25 },
+        scale: { x: 1, y: 1, z: 1 },
       },
 
       //   BoxColliderBehaviour: {
