@@ -13,9 +13,11 @@ import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
 export default class Player extends BaseReactiveObject {
   static prefab: GLTF;
 
-  mixer: any;
+  mixer: THREE.AnimationMixer | undefined;
 
-  animations: any[];
+  animActions: { [key: string]: THREE.AnimationAction };
+
+  currentAction: THREE.AnimationAction | undefined;
 
   @editable
   public speed: number = 3;
@@ -39,7 +41,7 @@ export default class Player extends BaseReactiveObject {
   public constructor(initialProps: BaseObjectParams) {
     super(initialProps);
     this.clock = new THREE.Clock();
-    this.animations = [];
+    this.animActions = {};
   }
 
   public get complete() {
@@ -53,11 +55,7 @@ export default class Player extends BaseReactiveObject {
     this._running = value;
 
     if (value) {
-      const runAnimation = this.animations.find((anim) => {
-        return anim.name == "Jog";
-      });
-      const action = this.mixer.clipAction(runAnimation);
-      action.play();
+      this.playAnimation("Jog");
     }
   }
 
@@ -73,7 +71,7 @@ export default class Player extends BaseReactiveObject {
     }
 
     if (!this._complete) {
-      this.mixer.timeScale = this.speed * 3;
+      this.mixer!.timeScale = this.speed * 3;
 
       this.threeObj!.position.z -= this.speed * delta;
 
@@ -86,21 +84,24 @@ export default class Player extends BaseReactiveObject {
   public setComplete = (place: number) => {
     this._complete = true;
     this.threeObj!.rotation.z = 0;
-    this.showPlaceLabel(place); // TODO - replace with index of player in game manager
+    this.showPlaceLabel(place);
 
-    let doneAnim;
-    debugger;
     if (place === 1) {
-      doneAnim = this.animations.find((anim) => {
-        return anim.name == "Victory";
-      });
+      this.playAnimation("Victory");
     } else {
-      doneAnim = this.animations.find((anim) => {
-        return anim.name == "Defeat";
-      });
-      const action = this.mixer.clipAction(doneAnim);
-      action.play();
+      this.playAnimation("Defeat");
     }
+  };
+
+  private playAnimation = (newAnim: "Victory" | "Jog" | "Defeat" | "Idle") => {
+    const newAnimation = this.animActions[newAnim];
+
+    if (this.currentAction) {
+      this.currentAction.crossFadeTo(newAnimation, 0.5, true);
+    }
+    newAnimation.play();
+
+    this.currentAction = newAnimation;
   };
 
   private showPlaceLabel = (place: number) => {
@@ -179,13 +180,20 @@ export default class Player extends BaseReactiveObject {
       this.label.sync();
 
       this.mixer = new THREE.AnimationMixer(newobj as any);
-      this.animations = prefab.animations; //newobj.animations;
 
-      const idleAnimation = this.animations.find((anim) => {
-        return anim.name == "Idle";
-      });
-      const action = this.mixer.clipAction(idleAnimation);
-      action.play();
+      this.animActions = ["Idle", "Defeat", "Victory", "Jog"].reduce(
+        (actions, animName) => {
+          actions[animName] = this.mixer!.clipAction(
+            (prefab.animations as any[]).find((anim) => {
+              return anim.name == animName;
+            })
+          );
+          return actions;
+        },
+        {} as { [key: string]: THREE.AnimationAction }
+      );
+
+      this.playAnimation("Idle");
 
       return newobj;
     } catch (e) {
