@@ -3,6 +3,8 @@ import Player from "./player";
 import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
 import * as THREE from "three";
 
+const playerCount = 10;
+
 interface GameState {
   players: Player[];
   results: any[];
@@ -154,7 +156,7 @@ export default class GameManager extends BaseReactiveObject {
         this._camera!.position.lerp(targetPos, delta * rotSpeed);
 
         const lookatTarget = this.players.length
-          ? this.players[this.players.length / 2].threeObj!.position
+          ? this.players[Math.floor(this.players.length / 2)].threeObj!.position
           : new THREE.Vector3(0, 0, 0);
 
         const target = this._camera!.clone();
@@ -201,7 +203,51 @@ export default class GameManager extends BaseReactiveObject {
     return this._gameState;
   }
 
-  public addPlayer() {}
+  public async removePlayer(id: string) {
+    const player = this.players.find((p) => p._id === id);
+    if (player) {
+      this.players = this.players.filter((p) => p._id !== id);
+      this._pebbleScene!.destroy(player._id);
+      this.updateGameState();
+    }
+  }
+
+  public async addPlayer() {
+    await this.createPlayer(this.players.length);
+    this.updateGameState();
+  }
+
+  private createPlayer = async (index: number) => {
+    const initialPlayerProps = {
+      threeObj: {
+        position: { x: -1, y: 0.2, z: this.mapDimensions.z / 2 },
+        rotation: { x: 0, y: 180, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+      },
+    } as any;
+
+    const initialXOffset = this.mapDimensions.x / 2;
+    const spacing = this.mapDimensions.x / playerCount;
+
+    const newProps = {
+      ...initialPlayerProps,
+      name: `Player ${index + 1}`,
+      threeObj: {
+        ...initialPlayerProps.threeObj,
+        position: {
+          ...initialPlayerProps.threeObj.position,
+          x: -index * spacing + initialXOffset,
+        },
+      },
+    };
+    const newObj = new Player(newProps);
+    await this._pebbleScene!.instantiate(newObj);
+    this._pebbleScene!.scene.add(newObj.threeObj!);
+    this.players.push(newObj);
+    newObj.subscribe(() => {
+      this.updateGameState();
+    });
+  };
 
   public start(_pebbleScene: PebbleScene): void {
     this._pebbleScene = _pebbleScene;
@@ -219,37 +265,9 @@ export default class GameManager extends BaseReactiveObject {
       //   },
     } as any;
 
-    const playerCount = 10;
-    const initialXOffset = this.mapDimensions.x / 2;
-    const spacing = this.mapDimensions.x / playerCount;
-
-    //instantiate players at x positions 0-9, with a promise.all
-    const instantiatePlayer = async ({ i }: any) => {
-      // clone initialProps, but replace threeObj.position.x with i
-      const newProps = {
-        ...initialPlayerProps,
-        name: `Player ${i + 1}`,
-        threeObj: {
-          ...initialPlayerProps.threeObj,
-          position: {
-            ...initialPlayerProps.threeObj.position,
-            x: -i * spacing + initialXOffset,
-          },
-        },
-      };
-      const newObj = new Player(newProps);
-
-      await _pebbleScene.instantiate(newObj);
-      _pebbleScene.scene.add(newObj.threeObj!);
-      this.players.push(newObj);
-      newObj.subscribe(() => {
-        this.updateGameState();
-      });
-    };
-
     Promise.all(
-      Array.from({ length: playerCount }, (_, i) => i).map((i) =>
-        instantiatePlayer({ i })
+      Array.from({ length: playerCount }, (_, i) => i).map(
+        async (i) => await this.createPlayer(i)
       )
     ).then(() => {
       this.updateGameState();

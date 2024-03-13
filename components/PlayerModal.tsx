@@ -28,7 +28,9 @@ export const PlayerModal = ({ gameManager }: { gameManager: GameManager }) => {
                       }}
                       className="flex-auto"
                     />{" "}
-                    <Button>
+                    <Button
+                      onClick={() => gameManager.removePlayer(player._id)}
+                    >
                       {" "}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +55,7 @@ export const PlayerModal = ({ gameManager }: { gameManager: GameManager }) => {
           <div className="text-center space-x-2">
             <Button
               onClick={() => {
-                // race.racers = [...race.racers, new Racer("")];
+                gameManager.addPlayer();
               }}
             >
               {" "}

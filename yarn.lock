@@ -553,6 +553,11 @@
   resolved "https://registry.yarnpkg.com/@pebble-engine/core/-/core-0.0.0-20240204172229.tgz#a1d2471326794f45c73dabb372d58ae1e9f9e28c"
   integrity sha512-LbffNiap7D+EIgdKghsdXMshj4pCadGsD3tDcXZ3SM1AyIc9DgVk1r0FQ0kOtgmEUpc4JM16ppJjANp003Ii5A==
 
+"@pebble-engine/core@0.0.0-20240313020512":
+  version "0.0.0-20240313020512"
+  resolved "https://registry.yarnpkg.com/@pebble-engine/core/-/core-0.0.0-20240313020512.tgz#33f790d48111ad2d2eda149e6244d38c56a3c56e"
+  integrity sha512-lnx6Bh6RUbRRLGjFo4PT9wd6AL9vAlcXTXs/ExVKkJrl2JyB00+SlnsHhyhmK+Wpv/8FxD2+ixYA7ohvLejG5g==
+
 "@pebble-engine/studio-backend@0.0.0-20240204172229":
   version "0.0.0-20240204172229"
   resolved "https://registry.yarnpkg.com/@pebble-engine/studio-backend/-/studio-backend-0.0.0-20240204172229.tgz#2cb3fa08b8f42176f3d8ebf5aecc3d76941041f7"
