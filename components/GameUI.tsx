@@ -37,6 +37,12 @@ export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
 
   const gameState = useGameState(gameManager);
 
+  const results = gameState.players
+    .filter((p) => !!p.place)
+    .sort((player) => {
+      return player.place!;
+    });
+
   return (
     <>
       <div className="w-screen min-h-screen bg-green-800">
@@ -88,6 +94,27 @@ export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
               )}
             </div>
           </PlayerModalDialogue>
+          {gameState.state == State.race && results.length && (
+            <div className="p-2 px-4 absolute top-[50px]">
+              <p>Results</p>
+              <table className="table-auto table rounded-sm">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                {results.map((_, i) => (
+                  <tr key={i} className="bg-white text-black outline">
+                    <th className="p-2">{i + 1}.</th>
+                    <td className="p-2">
+                      {results.length > i ? results[i].name : ""}
+                    </td>
+                  </tr>
+                ))}
+              </table>
+            </div>
+          )}
         </main>
       </div>
     </>

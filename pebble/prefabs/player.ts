@@ -37,7 +37,7 @@ export default class Player extends BaseReactiveObject {
 
   private _running = false;
 
-  private _complete = false;
+  private _place: number | undefined;
   public constructor(initialProps: BaseObjectParams) {
     super(initialProps);
     this.clock = new THREE.Clock();
@@ -45,7 +45,11 @@ export default class Player extends BaseReactiveObject {
   }
 
   public get complete() {
-    return this._complete;
+    return !!this._place;
+  }
+
+  public get place() {
+    return this._place;
   }
 
   public get running() {
@@ -70,7 +74,7 @@ export default class Player extends BaseReactiveObject {
       return;
     }
 
-    if (!this._complete) {
+    if (!this.complete) {
       this.mixer!.timeScale = this.speed * 3;
 
       this.threeObj!.position.z -= this.speed * delta;
@@ -82,7 +86,7 @@ export default class Player extends BaseReactiveObject {
   }
 
   public setComplete = (place: number) => {
-    this._complete = true;
+    this._place = place;
     this.threeObj!.rotation.z = 0;
     this.showPlaceLabel(place);
 

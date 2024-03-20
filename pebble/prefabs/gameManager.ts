@@ -7,7 +7,6 @@ const playerCount = 10;
 
 interface GameState {
   players: Player[];
-  results: any[];
   state: State;
   speedModifier: number;
 }
@@ -16,7 +15,6 @@ export enum State {
   intro,
   playerSelect,
   race,
-  results,
 }
 export default class GameManager extends BaseReactiveObject {
   private players: Player[] = [];
@@ -59,7 +57,6 @@ export default class GameManager extends BaseReactiveObject {
 
     this._gameState = {
       players: [],
-      results: [],
       state: this.state,
       speedModifier: this._speedModifier,
     };
@@ -192,7 +189,6 @@ export default class GameManager extends BaseReactiveObject {
   private updateGameState() {
     this._gameState = {
       players: this.players,
-      results: [], // Add logic to update results if needed
       state: this.state,
       speedModifier: this._speedModifier,
     };
@@ -290,6 +286,7 @@ export default class GameManager extends BaseReactiveObject {
         if (player.threeObj!.position.z <= endPos) {
           player.setComplete(this.players.filter((p) => p.complete).length + 1);
           player.threeObj!.position.z = endPos;
+          this.updateGameState();
         }
       });
   }
