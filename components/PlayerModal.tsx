@@ -82,10 +82,11 @@ export const PlayerModal = ({ gameManager }: { gameManager: GameManager }) => {
 
             <Slider
               defaultValue={[gameState.speedModifier]}
-              max={0.005}
-              step={0.0005}
-              onChange={({ target: { value } }: any) => {
-                gameManager.setSpeedModifier(parseFloat(value));
+              max={0.031}
+              step={0.005}
+              min={0.001}
+              onValueChange={(value: any) => {
+                gameManager.setSpeedModifier(parseFloat(value[0]));
               }}
             />
             {/* 

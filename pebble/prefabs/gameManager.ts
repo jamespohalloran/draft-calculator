@@ -20,7 +20,7 @@ export default class GameManager extends BaseReactiveObject {
   private players: Player[] = [];
   private firstUpdate: boolean = true;
   private _gameState: GameState;
-  private _speedModifier: number = 0.0025;
+  private _speedModifier: number = 0.006;
   private _camera?: THREE.Camera;
 
   @editable({ type: "vector3" })
