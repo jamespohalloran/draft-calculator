@@ -307,6 +307,7 @@ export default class GameManager extends BaseReactiveObject {
   private adjustPlayerSpeeds() {
     this.players.forEach((player) => {
       player.speed = getRandomArbitrary(0.05, 200) * this._speedModifier;
+      player.wobbleSpeed = player.speed / this._speedModifier;
     });
   }
 

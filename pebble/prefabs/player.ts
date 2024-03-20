@@ -75,7 +75,7 @@ export default class Player extends BaseReactiveObject {
     }
 
     if (!this.complete) {
-      this.mixer!.timeScale = this.speed * 3;
+      this.mixer!.timeScale = this.wobbleSpeed * 0.01;
 
       this.threeObj!.position.z -= this.speed * delta;
 
