@@ -124,7 +124,9 @@ export default class GameManager extends BaseReactiveObject {
       const fieldOfView =
         (this._camera! as THREE.PerspectiveCamera).fov * (Math.PI / 180);
 
-      var height = Math.tan(fieldOfView / 2) * this.mapDimensions.z;
+      const endzoneFudge = 4;
+      var height =
+        Math.tan(fieldOfView / 2) * (this.mapDimensions.z + endzoneFudge);
       var width = Math.sin(fieldOfView / 2) * this.mapDimensions.x;
 
       this._targetCamTransform?.position.set(
