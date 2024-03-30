@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
-    "@pebble-engine/core": "0.0.0-20240313020512",
+    "@pebble-engine/core": "0.0.27",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-label": "^2.0.2",
@@ -42,7 +42,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@pebble-engine/studio": "0.0.0-20240204172229",
+    "@pebble-engine/studio": "0.0.30",
     "@types/node": "18.7.13",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",

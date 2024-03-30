@@ -32,6 +32,7 @@ class SpinnyCamBehaviour extends BaseBehaviour {
   private currentRotation = new THREE.Vector2(0, 0);
 
   public start(_pebbleScene: PebbleScene) {
+    return;
     this.scene = _pebbleScene;
 
     this.keydownHandler = this.keydown.bind(this);
@@ -79,6 +80,7 @@ class SpinnyCamBehaviour extends BaseBehaviour {
   }
 
   public update(delta: number) {
+    return;
     const direction = new THREE.Vector3();
 
     this._object.threeObj!.getWorldDirection(direction);

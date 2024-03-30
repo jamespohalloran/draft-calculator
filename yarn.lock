@@ -548,22 +548,17 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pebble-engine/core@0.0.0-20240204172229":
-  version "0.0.0-20240204172229"
-  resolved "https://registry.yarnpkg.com/@pebble-engine/core/-/core-0.0.0-20240204172229.tgz#a1d2471326794f45c73dabb372d58ae1e9f9e28c"
-  integrity sha512-LbffNiap7D+EIgdKghsdXMshj4pCadGsD3tDcXZ3SM1AyIc9DgVk1r0FQ0kOtgmEUpc4JM16ppJjANp003Ii5A==
+"@pebble-engine/core@0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@pebble-engine/core/-/core-0.0.27.tgz#8c2a90a32085f262a85aa0b123feceefd5b34dcf"
+  integrity sha512-RLF4lm9jPRfldHj6XnxB2BrD21b5bnes00rGbj0HH78Sf+5Sx+jozlaXABtofLoBgpVWFHhHJrfXzfob+2sTjA==
 
-"@pebble-engine/core@0.0.0-20240313020512":
-  version "0.0.0-20240313020512"
-  resolved "https://registry.yarnpkg.com/@pebble-engine/core/-/core-0.0.0-20240313020512.tgz#33f790d48111ad2d2eda149e6244d38c56a3c56e"
-  integrity sha512-lnx6Bh6RUbRRLGjFo4PT9wd6AL9vAlcXTXs/ExVKkJrl2JyB00+SlnsHhyhmK+Wpv/8FxD2+ixYA7ohvLejG5g==
-
-"@pebble-engine/studio-backend@0.0.0-20240204172229":
-  version "0.0.0-20240204172229"
-  resolved "https://registry.yarnpkg.com/@pebble-engine/studio-backend/-/studio-backend-0.0.0-20240204172229.tgz#2cb3fa08b8f42176f3d8ebf5aecc3d76941041f7"
-  integrity sha512-WoxviynKBy1LX35R2pZSxjqt5O1xx0V+Zv8Gu7mPEdkYyVkQAWZEQOFQ46FpSkqF7onj3Ea/vTjaBZs3f6RpAA==
+"@pebble-engine/studio-backend@0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@pebble-engine/studio-backend/-/studio-backend-0.0.29.tgz#8362613c053465b37e8337fbda849b06bbc80576"
+  integrity sha512-MwQ/83mTEMvM3NRgRx/TwQ1qepM9HYt57QChTSQ1/WFtApDBNvVsHPmd5wVnA7Y1xXaJ85N1XZaQc69UVmdZQg==
   dependencies:
-    "@pebble-engine/core" "0.0.0-20240204172229"
+    "@pebble-engine/core" "0.0.27"
     "@trpc/server" "^10.25.1"
     cors "^2.8.5"
     express "^4.18.2"
@@ -572,14 +567,14 @@
     react-dom "^18.2.0"
     zod "^3.21.4"
 
-"@pebble-engine/studio@0.0.0-20240204172229":
-  version "0.0.0-20240204172229"
-  resolved "https://registry.yarnpkg.com/@pebble-engine/studio/-/studio-0.0.0-20240204172229.tgz#c76b0cc6cc95e5691c2ee19a85d8745886875118"
-  integrity sha512-4G5H0g7eUxLDjdKz0P0AlZ5rsUcvEsmj7gEELLtSq7p4uYyqHSMy1Kq7+8PidRlt3iooLXi9PnzOmEwdmw1V/A==
+"@pebble-engine/studio@0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@pebble-engine/studio/-/studio-0.0.30.tgz#240c154bdeb5a122ce4d9b475a8018d2bddaad4f"
+  integrity sha512-iVkir10OFHCIU8v8OcKinc14w94yoQsUChxbLkKy4WirBqq2oiyvcM5R1klLrYnlgbkeib6zgZLjdqwCPRNc4w==
   dependencies:
     "@hookform/resolvers" "^3.1.1"
-    "@pebble-engine/core" "0.0.0-20240204172229"
-    "@pebble-engine/studio-backend" "0.0.0-20240204172229"
+    "@pebble-engine/core" "0.0.27"
+    "@pebble-engine/studio-backend" "0.0.29"
     "@radix-ui/react-collapsible" "^1.0.3"
     "@radix-ui/react-dialog" "^1.0.4"
     "@radix-ui/react-dropdown-menu" "^2.0.5"

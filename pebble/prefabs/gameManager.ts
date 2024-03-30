@@ -247,7 +247,8 @@ export default class GameManager extends BaseReactiveObject {
     });
   };
 
-  public start(_pebbleScene: PebbleScene): void {
+  public override start(_pebbleScene: PebbleScene): void {
+    debugger;
     this._pebbleScene = _pebbleScene;
     const initialPlayerProps = {
       threeObj: {
