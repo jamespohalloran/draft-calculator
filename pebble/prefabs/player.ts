@@ -1,4 +1,4 @@
-import { BaseObjectParams, editable } from "@pebble-engine/core";
+import { BaseObjectParams, PebbleScene, editable } from "@pebble-engine/core";
 import * as THREE from "three";
 //@ts-ignore
 import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -61,9 +61,21 @@ export default class Player extends BaseReactiveObject {
     if (value) {
       this.playAnimation("Jog");
     }
+
+    if (this._running) {
+      this.label.position.y = 0;
+    }
   }
 
-  public override start(_pebbleScene: any): void {
+  public setLabelOffset(camPosition: { x: number; y: number; z: number }) {
+    // set label position offset based on distance on x axis from camera
+    return;
+    this.label.position.x =
+      0.1 - 0.03 * (this.threeObj!.position.x - camPosition.x);
+  }
+
+  public override start(pebbleScene: any): void {
+    // TODO - not called because of a bug in the engine
     // setup animation
   }
 
@@ -172,11 +184,14 @@ export default class Player extends BaseReactiveObject {
 
       // Set properties to configure:
       this.label.text = this.name;
-      this.label.fontSize = 0.2;
-      this.label.position.x = 0;
+      this.label.fontSize = 0.3;
+      this.label.position.x = -0.3;
       this.label.position.y = 1.3;
       this.label.position.z = 0;
       this.label.anchorX = "center";
+      this.label.font = "/fonts/kenvector_future_thin.ttf";
+      this.label.outlineColor = 0xffffff;
+      this.label.outlineWidth = 0.02;
       this.label.color = 0x000000;
 
       this.label.material = labelMat;
@@ -260,6 +275,7 @@ function create3dLabelMaterial(
 
             modelViewPosition.xyz += position * modelViewScale;
             gl_Position = projectionMatrix * modelViewPosition;
+            gl_Position.z = 1.0; // Set z-coordinate to 1 to render on top
         `,
     ...options,
   });

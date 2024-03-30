@@ -240,6 +240,7 @@ export default class GameManager extends BaseReactiveObject {
     };
     const newObj = new Player(newProps);
     await this._pebbleScene!.instantiate(newObj);
+    newObj.setLabelOffset(this._camera!.position);
     this._pebbleScene!.scene.add(newObj.threeObj!);
     this.players.push(newObj);
     newObj.subscribe(() => {
@@ -248,7 +249,6 @@ export default class GameManager extends BaseReactiveObject {
   };
 
   public override start(_pebbleScene: PebbleScene): void {
-    debugger;
     this._pebbleScene = _pebbleScene;
     const initialPlayerProps = {
       threeObj: {
