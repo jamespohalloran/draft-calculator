@@ -156,6 +156,17 @@ export default class FlyCam extends BaseObject {
   }) {
     super({ name, threeObj, _id });
     this.registerScript(SpinnyCamBehaviour);
+
+    // on resize, update the camera aspect ratio
+    window.addEventListener("resize", () => {
+      if (this.threeObj instanceof THREE.Camera) {
+        if (this.threeObj) {
+          (this.threeObj as THREE.PerspectiveCamera).aspect =
+            window.innerWidth / window.innerHeight;
+          (this.threeObj as THREE.PerspectiveCamera).updateProjectionMatrix();
+        }
+      }
+    });
   }
 
   protected override getThreeObject() {

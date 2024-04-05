@@ -19,7 +19,16 @@ function App() {
     //setup Three renderer
     const renderer = new THREE.WebGLRenderer();
     renderer.setClearAlpha(0);
-    renderer.setSize(window.innerWidth, window.innerHeight, false);
+
+    const setSize = () => {
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
+    };
+
+    setSize();
+    // on window resize, adjust the camera aspect ratio
+    window.addEventListener("resize", () => {
+      setSize();
+    });
 
     //setup Three scene
     const scene = new THREE.Scene();
