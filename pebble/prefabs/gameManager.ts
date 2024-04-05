@@ -3,8 +3,6 @@ import Player from "./player";
 import { BaseReactiveObject } from "../../utils/BaseReactiveObject";
 import * as THREE from "three";
 
-const playerCount = 10;
-
 interface CachedPlayer {
   name: string;
 }
@@ -64,9 +62,9 @@ export default class GameManager extends BaseReactiveObject {
       (initialProps as any).mapDimensions || new THREE.Vector3(10, 10, 10);
     this.mapOffset = new THREE.Vector3(0, 0, 0);
 
-    this._speedModifier = JSON.parse(
-      localStorage.getItem("game_state") || "{}"
-    ).speedModifier;
+    this._speedModifier =
+      JSON.parse(localStorage.getItem("game_state") || "{}").speedModifier ||
+      this.speedModifier;
     this._gameState = {
       players: [],
       state: this.state,
@@ -296,16 +294,13 @@ export default class GameManager extends BaseReactiveObject {
     } as any;
 
     let initialPlayers = (JSON.parse(localStorage.getItem("game_state") || "{}")
-      .players || []) as CachedPlayer[];
-    if (!initialPlayers.length) {
-      initialPlayers = Array.from({ length: playerCount }, (_, i) => i).map(
-        (p) => {
-          return {
-            name: `Player ${p + 1}`,
-          };
-        }
-      );
-    }
+      .players ||
+      Array.from({ length: 10 }, (_, i) => i).map((p) => {
+        return {
+          name: `Player ${p + 1}`,
+        };
+      })) as CachedPlayer[];
+
     Promise.all(
       initialPlayers.map(async (p, i) => await this.createPlayer(p.name, i))
     ).then(() => {
