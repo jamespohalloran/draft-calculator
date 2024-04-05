@@ -295,14 +295,9 @@ export default class GameManager extends BaseReactiveObject {
       //   },
     } as any;
 
-    let gameCache: GameCache = {
-      players: [],
-      speedModifier: this.speedModifier,
-    };
-    //check for localStorage data
     let initialPlayers = (JSON.parse(localStorage.getItem("game_state") || "{}")
       .players || []) as CachedPlayer[];
-    if (!(gameCache?.players || []).length) {
+    if (!initialPlayers.length) {
       initialPlayers = Array.from({ length: playerCount }, (_, i) => i).map(
         (p) => {
           return {
