@@ -231,6 +231,7 @@ export default class GameManager extends BaseReactiveObject {
       this._pebbleScene!.destroy(player._id);
       this.updateGameState();
     }
+    this.adjustPlayerSpacing();
   }
 
   public async addPlayer() {
@@ -241,6 +242,13 @@ export default class GameManager extends BaseReactiveObject {
     this.updateGameState();
   }
 
+  private adjustPlayerSpacing = () => {
+    const initialXOffset = this.mapDimensions.x / 2;
+    const spacing = this.mapDimensions.x / this.players.length;
+    this.players.forEach((player, i) => {
+      player.threeObj!.position.x = -i * spacing + initialXOffset;
+    });
+  };
   private createPlayer = async (name: string, index: number) => {
     const initialPlayerProps = {
       threeObj: {
@@ -250,9 +258,6 @@ export default class GameManager extends BaseReactiveObject {
       },
     } as any;
 
-    const initialXOffset = this.mapDimensions.x / 2;
-    const spacing = this.mapDimensions.x / playerCount;
-
     const newProps = {
       ...initialPlayerProps,
       name,
@@ -260,7 +265,6 @@ export default class GameManager extends BaseReactiveObject {
         ...initialPlayerProps.threeObj,
         position: {
           ...initialPlayerProps.threeObj.position,
-          x: -index * spacing + initialXOffset,
         },
       },
     };
@@ -272,6 +276,7 @@ export default class GameManager extends BaseReactiveObject {
     newObj.subscribe(() => {
       this.updateGameState();
     });
+    this.adjustPlayerSpacing();
   };
 
   public override start(_pebbleScene: PebbleScene): void {
