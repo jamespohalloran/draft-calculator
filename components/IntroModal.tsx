@@ -62,7 +62,9 @@ export function IntroModal() {
               title="Tip the dev"
               kofiID="S6S5EMUTW"
             />
-            <AlertDialogAction>Get Started</AlertDialogAction>
+            <div className="mb-2 md:mb-0 [&>*]:w-full">
+              <AlertDialogAction>Get Started</AlertDialogAction>
+            </div>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
