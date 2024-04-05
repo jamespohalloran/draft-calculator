@@ -5,6 +5,15 @@ import * as THREE from "three";
 
 const playerCount = 10;
 
+interface CachedPlayer {
+  name: string;
+}
+
+interface GameCache {
+  players: CachedPlayer[];
+  speedModifier: number;
+}
+
 interface GameState {
   players: Player[];
   state: State;
@@ -55,6 +64,9 @@ export default class GameManager extends BaseReactiveObject {
       (initialProps as any).mapDimensions || new THREE.Vector3(10, 10, 10);
     this.mapOffset = new THREE.Vector3(0, 0, 0);
 
+    this._speedModifier = JSON.parse(
+      localStorage.getItem("game_state") || "{}"
+    ).speedModifier;
     this._gameState = {
       players: [],
       state: this.state,
@@ -193,6 +205,17 @@ export default class GameManager extends BaseReactiveObject {
       speedModifier: this._speedModifier,
     };
 
+    //save to local storage
+    if (this.state !== State.race) {
+      localStorage.setItem(
+        "game_state",
+        JSON.stringify({
+          players: this.players.map((p) => ({ name: p.name })),
+          speedModifier: this.speedModifier,
+        }) as any
+      );
+    }
+
     this.notifySubscribers();
   }
 
@@ -211,11 +234,14 @@ export default class GameManager extends BaseReactiveObject {
   }
 
   public async addPlayer() {
-    await this.createPlayer(this.players.length);
+    await this.createPlayer(
+      `Player ${this.players.length + 1}`,
+      this.players.length
+    );
     this.updateGameState();
   }
 
-  private createPlayer = async (index: number) => {
+  private createPlayer = async (name: string, index: number) => {
     const initialPlayerProps = {
       threeObj: {
         position: { x: -1, y: 0.2, z: this.mapDimensions.z / 2 },
@@ -229,7 +255,7 @@ export default class GameManager extends BaseReactiveObject {
 
     const newProps = {
       ...initialPlayerProps,
-      name: `Player ${index + 1}`,
+      name,
       threeObj: {
         ...initialPlayerProps.threeObj,
         position: {
@@ -264,10 +290,24 @@ export default class GameManager extends BaseReactiveObject {
       //   },
     } as any;
 
+    let gameCache: GameCache = {
+      players: [],
+      speedModifier: this.speedModifier,
+    };
+    //check for localStorage data
+    let initialPlayers = (JSON.parse(localStorage.getItem("game_state") || "{}")
+      .players || []) as CachedPlayer[];
+    if (!(gameCache?.players || []).length) {
+      initialPlayers = Array.from({ length: playerCount }, (_, i) => i).map(
+        (p) => {
+          return {
+            name: `Player ${p + 1}`,
+          };
+        }
+      );
+    }
     Promise.all(
-      Array.from({ length: playerCount }, (_, i) => i).map(
-        async (i) => await this.createPlayer(i)
-      )
+      initialPlayers.map(async (p, i) => await this.createPlayer(p.name, i))
     ).then(() => {
       this.updateGameState();
     });
