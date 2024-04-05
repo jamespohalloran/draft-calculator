@@ -25,7 +25,12 @@ export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
 
   const threeContainer = React.useRef<HTMLDivElement>(null);
 
+  const gameState = useGameState(gameManager);
+
   useEffect(() => {
+    if (!gameState.loaded) {
+      return;
+    }
     const container = threeContainer.current;
 
     container!.appendChild(pebbleScene.renderer.domElement);
@@ -33,9 +38,7 @@ export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
     return () => {
       container!.removeChild(pebbleScene.renderer.domElement);
     };
-  }, []);
-
-  const gameState = useGameState(gameManager);
+  }, [gameState.loaded]);
 
   const results = gameState.players
     .filter((p) => !!p.place)

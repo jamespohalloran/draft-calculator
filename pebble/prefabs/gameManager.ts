@@ -16,6 +16,7 @@ interface GameState {
   players: Player[];
   state: State;
   speedModifier: number;
+  loaded: boolean;
 }
 
 export enum State {
@@ -45,6 +46,7 @@ export default class GameManager extends BaseReactiveObject {
   private state: State = State.intro;
 
   private _pebbleScene?: PebbleScene;
+  private loaded: boolean = false;
   public constructor({
     name,
     threeObj,
@@ -69,6 +71,7 @@ export default class GameManager extends BaseReactiveObject {
       players: [],
       state: this.state,
       speedModifier: this._speedModifier,
+      loaded: this.loaded,
     };
 
     this.speedAdjustmentInterval = setInterval(() => {
@@ -201,6 +204,7 @@ export default class GameManager extends BaseReactiveObject {
       players: this.players,
       state: this.state,
       speedModifier: this._speedModifier,
+      loaded: this.loaded,
     };
 
     //save to local storage
@@ -233,10 +237,7 @@ export default class GameManager extends BaseReactiveObject {
   }
 
   public async addPlayer() {
-    await this.createPlayer(
-      `Player ${this.players.length + 1}`,
-      this.players.length
-    );
+    await this.createPlayer(`Player ${this.players.length + 1}`);
     this.updateGameState();
   }
 
@@ -247,7 +248,7 @@ export default class GameManager extends BaseReactiveObject {
       player.threeObj!.position.x = -i * spacing + initialXOffset;
     });
   };
-  private createPlayer = async (name: string, index: number) => {
+  private createPlayer = async (name: string) => {
     const initialPlayerProps = {
       threeObj: {
         position: { x: -1, y: 0.2, z: this.mapDimensions.z / 2 },
@@ -279,19 +280,6 @@ export default class GameManager extends BaseReactiveObject {
 
   public override start(_pebbleScene: PebbleScene): void {
     this._pebbleScene = _pebbleScene;
-    const initialPlayerProps = {
-      threeObj: {
-        position: { x: -1, y: 0.2, z: this.mapDimensions.z / 2 },
-        rotation: { x: 0, y: 180, z: 0 },
-        scale: { x: 1, y: 1, z: 1 },
-      },
-
-      //   BoxColliderBehaviour: {
-      //     kinetic: false, // maybe change this later, but this collides with new arrows and changes position
-      //     offset: { x: 0, y: 0, z: 0 },
-      //     dimensions: { x: 0.1, y: 0.5, z: 0.1 },
-      //   },
-    } as any;
 
     let initialPlayers = (JSON.parse(localStorage.getItem("game_state") || "{}")
       .players ||
@@ -302,8 +290,9 @@ export default class GameManager extends BaseReactiveObject {
       })) as CachedPlayer[];
 
     Promise.all(
-      initialPlayers.map(async (p, i) => await this.createPlayer(p.name, i))
+      initialPlayers.map(async (p, i) => await this.createPlayer(p.name))
     ).then(() => {
+      this.loaded = true;
       this.updateGameState();
     });
 
