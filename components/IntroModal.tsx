@@ -12,9 +12,10 @@ import {
 import KofiButton from "kofi-button";
 
 export function IntroModal() {
+  const defaultOpen = !window?.location?.search.includes("skipIntro");
   return (
     <div>
-      <AlertDialog defaultOpen={true}>
+      <AlertDialog defaultOpen={defaultOpen}>
         <AlertDialogTrigger asChild>
           <div
             className="text-white cursor-pointer"

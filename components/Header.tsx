@@ -39,7 +39,8 @@ export const Header = ({ gameManager }: { gameManager: GameManager }) => {
             variant={"destructive"}
             className="btn-error btn btn-outline align-top text-white"
             onClick={() => {
-              window.location.reload();
+              //refresh page with skipIntro query param
+              window.location.search = "skipIntro";
             }}
           >
             Reset race
