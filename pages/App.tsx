@@ -37,7 +37,6 @@ function App() {
     pebbleScene = new PebbleScene({ renderer, scene });
 
     // Need to track this incase we unbind before scene is loaded
-    let bound = true;
     const container = threeContainer.current;
 
     const setupScene = async () => {
@@ -45,9 +44,6 @@ function App() {
         sceneData: myScene,
         prefabs,
       });
-      if (bound) {
-        // container!.appendChild(renderer.domElement);
-      }
       setLoaded(true);
     };
     setupScene();
@@ -58,7 +54,6 @@ function App() {
         // container!.removeChild(renderer.domElement);
         setLoaded(false);
       }
-      bound = false;
     };
   }, []);
 
