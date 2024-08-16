@@ -42,8 +42,8 @@ export const GameUI = ({ pebbleScene }: { pebbleScene: PebbleScene }) => {
 
   const results = gameState.players
     .filter((p) => !!p.place)
-    .sort((player) => {
-      return player.place!;
+    .sort((a, b) => {
+      return a.place! - b.place!;
     });
 
   return (
